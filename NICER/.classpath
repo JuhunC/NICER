@@ -45,5 +45,9 @@
 	<classpathentry kind="lib" path="C:/Program Files/Apache Software Foundation/Tomcat 9.0/lib/tomcat-util-scan.jar"/>
 	<classpathentry kind="lib" path="C:/Program Files/Apache Software Foundation/Tomcat 9.0/lib/tomcat-websocket.jar"/>
 	<classpathentry kind="lib" path="C:/Program Files/Apache Software Foundation/Tomcat 9.0/lib/websocket-api.jar"/>
+	<classpathentry kind="lib" path="C:/Users/JohnC/Desktop/Metasoft_src/lib/colt.jar"/>
+	<classpathentry kind="lib" path="C:/Users/JohnC/Desktop/Metasoft_src/lib/commons-cli-1.2.jar"/>
+	<classpathentry kind="lib" path="C:/Users/JohnC/Desktop/Metasoft_src/lib/commons-math-2.1.jar"/>
+	<classpathentry kind="lib" path="C:/Users/JohnC/Desktop/Metasoft_src/lib/java-getopt-1.0.13.jar"/>
 	<classpathentry kind="output" path="build/classes"/>
 </classpath>

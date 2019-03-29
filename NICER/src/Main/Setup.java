@@ -8,10 +8,8 @@ import java.io.PrintWriter;
 
 public class Setup {
 	// Set Default Directories
-	final static String FileSaveDirectory = "C:/Users/JohnC/Desktop/TEST/";//"/usr/share/tomcat/webapps/ROOT/download/";
-	final static String PlinkDirectory ="plink ";
-	final static String NICEDirectory ="C:/Users/JohnC/Desktop/NICE";
-	final static boolean isLinux = false;
+	final static String FileSaveDirectory = "/usr/share/tomcat/webapps/ROOT/download/";
+	final static String NICEdir = "";
 }
 
 class streamout extends Thread{
