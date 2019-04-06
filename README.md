@@ -10,4 +10,9 @@ NICE Renew
 
   R command : install.packages('qqman')
 
-4. 
+# For Trouble Shooting
+a. When NICE/t_test_static doesn't work!!
+
+  use following command to allow execution : sudo chmod -c 777 ./NICE/t_test_static
+  
+
