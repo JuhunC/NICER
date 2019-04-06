@@ -8,8 +8,9 @@ NICE Renew
 2. install R language
 3. install R 'qqman' package
 
-  R command : install.packages('qqman')
+    R command : install.packages('qqman')
 
+4. for eclipse - add all apache/lib/*.jar to the project
 # For Trouble Shooting
 a. When NICE/t_test_static doesn't work!!
 
