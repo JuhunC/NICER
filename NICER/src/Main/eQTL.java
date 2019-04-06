@@ -1,29 +1,12 @@
 package Main;
 
-import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.PrintWriter;
 import java.nio.file.Files;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-import javax.activation.DataHandler;
-import javax.activation.FileDataSource;
-import javax.mail.Address;
-import javax.mail.Authenticator;
-import javax.mail.BodyPart;
-import javax.mail.Message;
-import javax.mail.Multipart;
-import javax.mail.Session;
-import javax.mail.Transport;
-import javax.mail.internet.InternetAddress;
-import javax.mail.internet.MimeBodyPart;
-import javax.mail.internet.MimeMessage;
-import javax.mail.internet.MimeMultipart;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.ServletOutputStream;
@@ -40,7 +23,7 @@ import javax.servlet.http.Part;
 @MultipartConfig(maxFileSize = -1, maxRequestSize = -1,location =Setup.FileSaveDirectory)
 public class eQTL extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-       
+    
     /**
      * @see HttpServlet#HttpServlet()
      */
@@ -121,12 +104,17 @@ public class eQTL extends HttpServlet {
 			if(a_0 == null) {
 				a_0 = Runtime.getRuntime().exec("/home/ktg/NICE/eQTLmap4 -g "
 						+ userDirString + "/y_pos.txt -s " + userDirString + "/x_pos.txt -p " 
-					     + userDirString + "/p_value.txt -m 2.5 -M 5 -o " + userDirString + "/eQTL_test.png -z 2");
+					     + userDirString + "/p_value.txt -m 2.5 -M 5 -o " + userDirString + "/eQTL.png -z 2");
 				
 				a_0.waitFor();
 			}
+			   	String _tmp = Setup.FileSaveDirectory+emailAddress+"/"+strDate+"/eQTL.png";
+			   	// send email
+			   	NICEServlet.sendResultMail(Setup.FileSaveDirectory+emailAddress+"/"+strDate,
+			   			"/eQTL.png",emailAddress, 0);
 			   	
-				String address = "http://210.94.194.52:8080/download/"+emailAddress+"/"+strDate+"/eQTL_test.png";
+			   	_tmp = _tmp.replace("/", Setup.urlencode);
+				String address = "http://210.94.194.52:8080/NICER/Download?file="+_tmp;
 								
 				response.setContentType("text/html; charset=euc-kr");
 				StringBuffer tet = new StringBuffer();
@@ -136,7 +124,6 @@ public class eQTL extends HttpServlet {
 				ServletOutputStream out = response.getOutputStream();
 				out.println(tet.toString());
 				out.flush();
-				
 		
 		}
 		catch(Exception e) {

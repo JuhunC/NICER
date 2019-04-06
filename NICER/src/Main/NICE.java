@@ -4,6 +4,7 @@ import java.io.*;
 import java.nio.file.Files;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Vector;
 
 import javax.servlet.http.*;
 
@@ -13,12 +14,12 @@ public class NICE {
 	public String email_dir;
 	private int thr_num; // total number of threads(1,2,...)
 	private Thread[] thr;
-	
+	private final int FORCE_THREAD = 50; // Force Thread Number(not to force <= 0)
 	NICE(String emailaddr, HttpServletRequest request){
 		// create directory
 		email_dir = Setup.FileSaveDirectory + emailaddr+"/";
 		File userDir = new File(email_dir);
-		if(userDir.mkdir()) {			//this part need Optimize
+		if(!userDir.exists() && userDir.mkdir()) {			//this part need Optimize
 			Process f_chm = null;
 			try {
 				if(f_chm == null) {
@@ -30,10 +31,11 @@ public class NICE {
 			catch(Exception e) {
 				e.printStackTrace();
 			} 
-			email_dir += getCurrentStrDate();// append date within email address 
-			userDir = new File(email_dir);
-			userDir.mkdir();
 		}
+		 
+		email_dir += getCurrentStrDate()+"/";// append date within email address 
+		userDir = new File(email_dir);
+		userDir.mkdir();
 	}
 	public void run(String thr_num_str) {
 		createThreadDir(thr_num_str);
@@ -41,7 +43,6 @@ public class NICE {
 		// count lines for each thr
 		int x_cnt = countXfile(x_file.getAbsolutePath());
 		int thr_ln_x = x_cnt / thr_num +1;
-		System.out.println("thr_ln_x"+thr_ln_x);
 		
 		divideXfile(thr_ln_x);
 		
@@ -56,13 +57,12 @@ public class NICE {
 		try {
 			FileWriter fw = new FileWriter(email_dir+"/NICE.txt");
 			BufferedWriter bw = new BufferedWriter(fw);
-			for(int i =0;i<thr_num;i++) {
-				FileReader fr = new FileReader(email_dir+thr_num+"/NICE.txt");
+			for(int i =1;i<=thr_num;i++) {
+				FileReader fr = new FileReader(email_dir+i+"/NICE.txt");
 				BufferedReader br = new BufferedReader(fr);
 				String tmp = br.readLine();
 				while(tmp!=null) {
-					tmp+= "\n";
-					bw.write(tmp.toCharArray());
+					bw.write(tmp+"\n");
 					tmp = br.readLine();
 				}
 				br.close();
@@ -94,28 +94,50 @@ public class NICE {
 	}
 	private void divideXfile(int ln_cnt) {
 		try {
-			int thr_cnt = 1;
+			int ttl_ln = countXfile(x_file.getAbsolutePath());
 			FileReader fr = new FileReader(x_file.getAbsoluteFile());
 			BufferedReader br = new BufferedReader(fr);
-			String ln = br.readLine();
+			String tmp;
+			int thr_cnt = 1;
 			
-			FileWriter fw = new FileWriter(email_dir+"/"+thr_cnt+"/"+"X.txt");
-			BufferedWriter bw = new BufferedWriter(fw);
-			
-			int cnt =0;
-			while(ln != null) {
-				cnt++;
-				bw.write(ln.toCharArray());
-				ln = br.readLine();
-				
-				if(cnt == ln_cnt) {
-					bw.close();fw.close();
-					thr_cnt++; cnt = 0;
-					fw = new FileWriter(email_dir+"/"+thr_cnt+"/"+"X.txt");
-					bw = new BufferedWriter(fw);
+			BufferedWriter bw = new BufferedWriter(new FileWriter(email_dir+"/"+thr_cnt+"/X.txt"));
+			for(int i =0;i<ttl_ln;i++) {
+				tmp = br.readLine();
+				if(i!=0  && i%(ttl_ln/thr_num)==0) {
+					System.out.println(i);
+					bw.close();
+					thr_cnt++;
+					if(thr_cnt > thr_num)
+						break;
+					bw = new BufferedWriter(new FileWriter(email_dir+"/"+thr_cnt+"/X.txt"));
 				}
+				bw.write(tmp+"\n");
 			}
-			bw.close(); fw.close();
+			bw.close();
+//			int thr_cnt = 1;
+//			FileReader fr = new FileReader(x_file.getAbsoluteFile());
+//			BufferedReader br = new BufferedReader(fr);
+//			String ln = br.readLine();
+//			
+//			FileWriter fw = new FileWriter(email_dir+"/"+thr_cnt+"/"+"X.txt");
+//			BufferedWriter bw = new BufferedWriter(fw);
+//			
+//			int cnt =0;
+//			while(ln != null) {
+//				cnt++;
+//				ln+="\n";
+//				bw.write(ln.toCharArray());
+//				ln = br.readLine();
+//				
+//				if(cnt == ln_cnt) {
+//					bw.close();fw.close();
+//					thr_cnt++; cnt = 1;
+//					fw = new FileWriter(email_dir+"/"+thr_cnt+"/"+"X.txt");
+//					bw = new BufferedWriter(fw);
+//				}
+//			}
+//			bw.close(); fw.close();
+//			br.close(); fr.close();
 		}catch(Exception e) {
 			printERROR("Error while dividing X file!!");
 			e.printStackTrace();
@@ -139,7 +161,7 @@ public class NICE {
 			br.close();
 			fr.close();
 		} catch (Exception e) {
-			printERROR("Error while reading X file to count lines!!");
+			printERROR("Error while reading "+str+" file to count lines!!");
 			e.printStackTrace();
 		}
 		return ln_cnt;
@@ -153,6 +175,9 @@ public class NICE {
 			thr_num = 5;
 		}else{ //default
 			thr_num = 10;
+		}
+		if(FORCE_THREAD > 0) {
+			thr_num = FORCE_THREAD;
 		}
 		File[] userDir_ = new File[thr_num];
 		for(int i = 0; i < thr_num; i++) {
@@ -184,22 +209,25 @@ public class NICE {
 		// Upload SNP file	
 		try {
 			Part part = request.getPart("SNPfile2");
-			x_file = new File(email_dir+"/X_rightdim.txt");
+			File x = new File(email_dir+"/X_rightdim.txt");
 			try (InputStream inputStream= part.getInputStream()) { // save uploaded file
-				Files.copy(inputStream, x_file.toPath());
+				Files.copy(inputStream, x.toPath());
 			}		
 			// Upload Phenotype file
 			Part part1 = request.getPart("Phenotypefile2");
-			y_file = new File(email_dir+"/Y_rightdim.txt");
+			File y = new File(email_dir+"/Y_rightdim.txt");
 			try (InputStream inputStream= part1.getInputStream()) { // save uploaded file
-				Files.copy(inputStream, y_file.toPath());
+				Files.copy(inputStream, y.toPath());
 			}
 		}catch(Exception e) {
 			printERROR("Error Occured while uploading transposed XY data!!");
 			e.printStackTrace();
 		}
-		transposeFile(email_dir+"/X_rightdim.txt",email_dir+"/X.txt");
-		transposeFile(email_dir+"/Y_rightdim.txt",email_dir+"/Y.txt");
+		transposeFile(email_dir+"X_rightdim.txt",email_dir+"X.txt");
+		transposeFile(email_dir+"Y_rightdim.txt",email_dir+"Y.txt");
+		x_file = new File(email_dir+"/X.txt");
+		y_file = new File(email_dir+"/Y.txt");
+		System.out.println(email_dir);
 	}
 	private void downloadXY(HttpServletRequest request) {
 		try {
@@ -284,20 +312,60 @@ public class NICE {
 	}
 	public static void transposeFile(String inputFile, String outputFile) {
 		try {
-			Process pro;
-			File rightdim = new File(Setup.NICEdir + "/test.R");
-			FileWriter fw = new FileWriter(rightdim, true);
-			fw.write("X = as.matrix(read.table(\""+inputFile+"X.txt\"))\n" + 
-					"write.table(t(X), \"" + outputFile +"\"," + "row.names = F, col.names = F, quote = F)\n");
-			pro = Runtime.getRuntime().exec("R CMD BATCH " + rightdim.getPath());
+			Vector<String[]> vec = new Vector<>();
 			
-			fw.flush();
-			fw.close();
-			 
-			pro.waitFor();
-		}catch(Exception e){
+			FileReader fr = new FileReader(inputFile);
+			BufferedReader br = new BufferedReader(fr);
+			
+			String ln = br.readLine();
+			while(ln!= null) {
+				String[] list = ln.split(" ");
+				vec.add(list);
+				ln = br.readLine();
+			}
+			br.close(); fr.close();
+			
+			int row = vec.size();
+			int col = vec.get(0).length;
+			String mat[][] = new String[row][col];
+			for(int i =0;i<row;i++) {
+				String[] tmp = vec.get(i);
+				for(int j=0;j<col;j++) {
+					mat[i][j] = tmp[j];
+				}
+			}
+			vec.clear();
+			
+			FileWriter fw = new FileWriter(outputFile);
+			BufferedWriter bw = new BufferedWriter(fw);
+			for(int i =0;i<col;i++) {
+				for(int j =0;j<row;j++) {
+					bw.write(mat[j][i]+" ");
+				}
+				bw.write("\n");
+			}
+			bw.close(); fw.close();
+			
+		}catch(IOException e) {
 			printERROR("Error while transposing "+inputFile+"!!!");
 			e.printStackTrace();
 		}
+//		try {
+//			Process pro;
+//			File rightdim = new File(Setup.NICEdir + "/test.R");
+//			FileWriter fw = new FileWriter(rightdim, true);
+//			fw.write("X = as.matrix(read.table(\""+inputFile+"\"))\n" + 
+//					"write.table(t(X), \"" + outputFile +"\"," + "row.names = F, col.names = F, quote = F)\n");
+//			//fw.flush();
+//			fw.close();
+//			pro = Runtime.getRuntime().exec("R CMD BATCH " + rightdim.getPath());
+//			
+//			
+//			rightdim.delete();
+//			pro.waitFor();
+//		}catch(Exception e){
+//			printERROR("Error while transposing "+inputFile+"!!!");
+//			e.printStackTrace();
+//		}
 	}
 }

@@ -1,5 +1,4 @@
 package Main;
-import java.io.File;
 
 import METASOFT.*;;
 public class NICE_Runnable implements Runnable {
@@ -25,18 +24,19 @@ public class NICE_Runnable implements Runnable {
 	}
 	private void runStage3() {
 		try {
-		Process proc = Runtime.getRuntime().exec(
-				"R CMD BATCH --args "
-		+"-snp="+ email_dir+thr_num +"/X_rightdim.txt "
-		+"-pheno="+email_dir+"/Y_rightdim.txt -MvalueThreshold=0.5 "
-		+"-Mvalue="+email_dir+thr_num+"/posterior.txt -minGeneNumber=10 "
-		+"-Pdefault="+ email_dir+thr_num +"/p_ttest.txt "
-		+"-out="+email_dir+thr_num+"/ "
-//		+"-st_snp_num="+ num4 
-		+" -NICE=./ -- "+Setup.NICEdir+"/NICE.R" + " " + email_dir+thr_num + "/NICE.Rout");		 
-//		File n_check = new File(f_path + "/NICE.txt");
+			String cmd = "R CMD BATCH --args "
+					+"-snp="+ email_dir+thr_num +"/X_rightdim.txt "
+					+"-pheno="+email_dir+"/Y_rightdim.txt -MvalueThreshold=0.5 "
+					+"-Mvalue="+email_dir+thr_num+"/posterior.txt -minGeneNumber=10 "
+					+"-Pdefault="+ email_dir+thr_num +"/p_ttest.txt "
+					+"-out="+email_dir+thr_num+"/ "
+					//+"-st_snp_num="+ num4 +
+					+" -NICE="+Setup.NICEdir+" -- "+Setup.NICEdir+"/NICE.R" + " " + email_dir+thr_num + "/NICE.Rout";
+			Process proc = Runtime.getRuntime().exec(cmd);		 
+//			File n_check = new File(f_path + "/NICE.txt");
 
-		proc.waitFor();	
+			proc.waitFor();	
+			System.out.println("Thread "+thr_num+" has finished Stage 3");
 		}catch(Exception e) {
 			NICE.printERROR("Error for Thread "+thr_num+"\t While running Stage3!!!");
 			e.printStackTrace();
@@ -45,13 +45,19 @@ public class NICE_Runnable implements Runnable {
 	}
 	private void runStage2() {
 		try {
-			String args[] = {" -input ",Setup.NICEdir + "/inputMS.txt",
-			"-mvalue", "-mvalue_method","mcmc",
-			"-mcmc_sample","1000000","-seed","0","-mvalue_p_thres","1.0","-mvalue_prior_sigma","0.05",
-			"-mvalue_prior_beta","1","5",
-			"-pvalue_table",Setup.NICEdir+"/HanEskinPvalueTable.txt",
-			"-output",email_dir+thr_num +"/posterior.txt"};
-			Metasoft ms = new Metasoft(args);
+//			Process ps = Runtime.getRuntime().exec("java -Xmx2048m -jar "+Setup.NICEdir+"/Metasoft.jar -input "+ email_dir+thr_num + "/inputMS.txt -mvalue -mvalue_method mcmc -mcmc_sample 1000000 -seed 0 -mvalue_p_thres 1.0 -mvalue_prior_sigma 0.05 -mvalue_prior_beta 1 5 -pvalue_table "+Setup.NICEdir+"/HanEskinPvalueTable.txt -output "+ email_dir +thr_num +"/posterior.txt");
+//			ps.waitFor();
+//			String args[] = {" -input ",email_dir+thr_num + "/inputMS.txt",
+//			"-mvalue", "-mvalue_method","mcmc",
+//			"-mcmc_sample","1000000","-seed","0","-mvalue_p_thres","1.0","-mvalue_prior_sigma","0.05",
+//			"-mvalue_prior_beta","1","5",
+//			"-pvalue_table",Setup.NICEdir+"/HanEskinPvalueTable.txt",
+//			"-output",email_dir+thr_num +"/posterior.txt"};
+			Metasoft ms = new Metasoft(email_dir+thr_num+"/inputMS.txt",
+					Setup.NICEdir+"/HanEskinPvalueTable.txt",
+					email_dir+thr_num+"/posterior.txt",
+					email_dir+thr_num+"log.txt");
+			System.out.println("Thread "+thr_num+" has finished Stage 2");
 		}catch(Exception e) {
 			NICE.printERROR("Error for Thread "+thr_num+"\t While running Stage2!!!");
 			e.printStackTrace();
@@ -64,9 +70,10 @@ public class NICE_Runnable implements Runnable {
 					+" -snp=" + email_dir+thr_num + "/X_rightdim.txt" 
 					+" -pheno="+email_dir +"/Y_rightdim.txt"
 					+" -out=" + email_dir+thr_num+"/" 
-					+" -- /home/ktg/NICE/inputMS.R "
+					+" -- "+Setup.NICEdir+"/inputMS.R "
 					+ email_dir+thr_num + "/inputMS.Rout");
 			proc.waitFor();
+			System.out.println("Thread "+thr_num+" has finished Stage 1");
 		}catch(Exception e) {
 			NICE.printERROR("Error for Thread "+thr_num+"\t While running Stage1!!!");
 			e.printStackTrace();

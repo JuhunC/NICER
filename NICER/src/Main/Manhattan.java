@@ -6,8 +6,6 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.PrintWriter;
 import java.nio.file.Files;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -15,7 +13,6 @@ import java.util.Date;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.ServletOutputStream;
-import javax.servlet.ServletResponse;
 import javax.servlet.annotation.MultipartConfig;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -31,7 +28,7 @@ import javax.servlet.http.Part;
 @MultipartConfig(maxFileSize = -1, maxRequestSize = -1,location =Setup.FileSaveDirectory)
 public class Manhattan extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-    private boolean median = true;
+    private boolean median = false;
     /**
      * @see HttpServlet#HttpServlet()
      */
@@ -55,7 +52,6 @@ public class Manhattan extends HttpServlet {
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		String emailAddress = request.getParameter("emailAddress");
-		System.out.println(emailAddress);
 		
 		// Get session info
 		HttpSession session = request.getSession();
@@ -124,18 +120,16 @@ public class Manhattan extends HttpServlet {
 				
 				}
 			if(a_0_2 == null ) {
-				String num1 = ""; 
 				
-				File read_file = new File(userDirString+"/line_num.txt");
-				FileReader f_r = new FileReader(read_file);
-				BufferedReader b_r = new BufferedReader(f_r);
-				num1 = b_r.readLine().replace(" " + userDirString+"/p_value.txt", "");
-				
-				System.out.println(num1);
-				
+				int num1 = NICE.countXfile(file.getPath());
+				int num2 = 0;
+				BufferedReader br = new BufferedReader(new FileReader(new File(file.getPath())));
+				String temp = br.readLine();
+				num2 = temp.split(" ").length;
+				br.close();
 				File manhattan = new File(userDirString + "/man.R");
 				FileWriter fw = new FileWriter(manhattan, true);
-
+				System.out.println(num1+"\t"+num2);
 				fw.write("library(qqman)\n" +
 						 "x = as.matrix(read.table(\"" + file.getPath() + "\"))\n" +
 						 "x1 = array(,c("+ num1 +"),)\n" + 
@@ -154,19 +148,23 @@ public class Manhattan extends HttpServlet {
 						 "data <-data.frame(SNP=x1,CHR=x2,BP=x3, P=x4)\n" + 
 						 "png(\""+ userDirString +"/manhattan.png"+"\", width=2000, height=1000, pointsize=18)\n" + 
 						 "manhattan(data)\n" + 
-						 "dev.off()");
+						 "dev.off()\n");
+				fw.close();
 				
-				f_r.close();
-				b_r.close();
-				
-				System.out.println(manhattan.getPath());	
 				a_0_2 = Runtime.getRuntime().exec("R CMD BATCH " + manhattan.getPath());
 				
-				fw.flush();
-				fw.close();
-				String address = "http://210.94.194.52:8080/download/"+emailAddress+"/"+strDate+"/manhattan.png";
+				a_0_2.waitFor();	
 				
-			    a_0_2.waitFor();				
+				String _tmp = Setup.FileSaveDirectory+emailAddress+"/"+strDate+"/manhattan.png";
+				
+				_tmp = _tmp.replace("/",Setup.urlencode);
+				String address = "http://"+Setup.ipAddr+"/NICER/Download?file="+_tmp;
+				
+				
+				
+				NICEServlet.sendResultMail(Setup.FileSaveDirectory+emailAddress+"/"+strDate,
+			   			"/manhattan.png",emailAddress, 0);
+				
 				response.setContentType("text/html; charset=euc-kr");
 				StringBuffer tet = new StringBuffer();
 				tet.append("<script language='javascript'>");

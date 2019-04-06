@@ -12,7 +12,6 @@
 package METASOFT;
 import java.io.*;
 import java.util.*;
-import org.apache.commons.cli.*;
 import cern.jet.stat.Probability;
 
 public class Metasoft
@@ -48,303 +47,84 @@ public class Metasoft
    private  ArrayList<Double> meanEffectParts_;
    private  ArrayList<Double> heterogeneityParts_;
    private  String argsSummary_;
-   
-   public Metasoft(String[] args) {
-      double startTime = System.currentTimeMillis();
-      handleArguments(args);
-      System.err.printf("Arguments: "+argsSummary_);
-      MetaSnp.readPvalueTableFile(pvalueTableFile_);
-      System.err.println("----- Performing meta-analysis");
-      doMetaAnalysis();
-      computeLambda();
-      printLog();
-      System.err.println("----- Finished");
-      double endTime   = System.currentTimeMillis();
-      System.err.printf("----- Elapsed time: %.2f minutes\n", 
-			(endTime - startTime)/(60*1000F));
+   public Metasoft(String inputFile, String pvalueTable, String output_file, String log_file) {
+	   inputFile_ = inputFile;
+	   pvalueTableFile_ = pvalueTable;
+	   outputFile_ = output_file;
+	   logFile_ = log_file;
+	   defaultSetup();
+	   double startTime = System.currentTimeMillis();
+       System.err.printf("Arguments: "+argsSummary_);
+       MetaSnp.readPvalueTableFile(pvalueTableFile_);
+       System.err.println("----- Performing meta-analysis");
+       doMetaAnalysis();
+       computeLambda();
+       printLog();
+       System.err.println("----- Finished");
+       double endTime   = System.currentTimeMillis();
+       System.err.printf("----- Elapsed time: %.2f minutes\n", 
+		 	(endTime - startTime)/(60*1000F));
+   }
+   public void defaultSetup() {
+	   mvalueMethod_ = "mcmc";
+	   willComputeMvalue_ = true;
+	   priorSigma_ = 0.05;
+	   priorAlpha_ = 1;
+	   priorBeta_ = 5;
+	   mvaluePvalueThreshold_ = 1.0;
+	   mcmcSample_ = 1000000;
+	   seed_ = 0;
+	      // Manual argument validity checkup
+	      System.err.println("-------- Processing arguments ---------");
+	      if (inputFile_.equals("")) {
+		 printErrorAndQuit("A valid input file must be specified using option -input");
+	      }
+	      if (inputLambdaMeanEffect_ <= 0.0) {
+		 printErrorAndQuit("lambda_mean option takes a float value > 0");
+	      }
+	      if (inputLambdaHeterogeneity_ <= 0.0) {
+		 printErrorAndQuit("lambda_hetero option takes a float value > 0");
+	      }
+	      if (priorSigma_ <= 0.0) {
+		 printErrorAndQuit("mvalue_prior_sigma option takes a float value > 0");
+	      }
+	      if (priorAlpha_ <= 0.0 || priorBeta_ <= 0.0) {
+		 printErrorAndQuit("mvalue_prior_beta option takes two float values > 0");
+	      }
+	      if (mvaluePvalueThreshold_ < 0.0 || mvaluePvalueThreshold_ > 1.0) {
+		 printErrorAndQuit("mvalue_p_thres takes a float value between 0 and 1");
+	      }
+	      if (!mvalueMethod_.equals("exact") &&
+		  !mvalueMethod_.equals("mcmc")  &&
+		  !mvalueMethod_.equals("variational")) {
+		 printErrorAndQuit("mvalue_method option only takes a value 'exact' or 'mcmc'");
+	      }
+	      if (mcmcSample_ < 1) {
+		 printErrorAndQuit("mcmc_sample option takes an integer value > 0");
+	      }
+	      if (mcmcBurnin_ < 1) {
+		 printErrorAndQuit("mcmc_burnin option takes an integer value > 0");
+	      }
+	      if (mcmcSample_ < mcmcBurnin_) {
+		 printErrorAndQuit("mcmc_sample must be larger than mcmc_burnin");
+	      }
+	      if (mcmcProbRandom_ < 0.0 || mcmcProbRandom_ > 1.0) {
+		 printErrorAndQuit("mcmc_prob_random takes a float value between 0 and 1");
+	      }
+	      if (mcmcMaxNumFlip_ <= 0.0) {
+		 printErrorAndQuit("mcmc_max_num_flip takes a value > 0");
+	      }
+	      if (binaryEffectsSample_ < 1) {
+		 printErrorAndQuit("binary_effects_sample option takes an integer value > 0");
+	      }
+	      if (binaryEffectsLargeSample_ < 1) {
+		 printErrorAndQuit("binary_effects_large option takes an integer value > 0");
+	      }
+	      if (binaryEffectsPvalueThreshold_ < 0.0 || binaryEffectsPvalueThreshold_ > 1.0) {
+		 printErrorAndQuit("binary_effects_p_thres takes a float value between 0 and 1");
+	      }
    }
    
-   private void handleArguments(String[] args) {
-      if (args.length == 0) {
-	 printErrorAndQuit("ERROR: No argument. Please type 'java -jar Metasoft.jar -help' to see a list of options");
-      }
-      CommandLineParser parser = new GnuParser();
-      Options options = new Options();
-      // Option build-up
-      options.addOption( OptionBuilder
-			 .withLongOpt("input")
-			 .withDescription("Input file (Required)")
-			 .hasArg()
-			 .withArgName("FILE")
-			 .create() );
-      options.addOption( OptionBuilder
-			 .withLongOpt("output")
-			 .withDescription("Output file (default='out')")
-			 .hasArg()
-			 .withArgName("FILE")
-			 .create() );
-      options.addOption( OptionBuilder
-			 .withLongOpt("pvalue_table")
-			 .withDescription("Pvalue table file (default='HanEskinPvalueTable.txt')")
-			 .hasArg()
-			 .withArgName("FILE")
-			 .create() );
-      options.addOption( OptionBuilder
-			 .withLongOpt("log")
-			 .withDescription("Log file (default='log')")
-			 .hasArg()
-			 .withArgName("FILE")
-			 .create() );
-      options.addOption( OptionBuilder
-			 .withLongOpt("lambda_mean")
-			 .withDescription("(Random Effects) User-specified lambda for mean effect part (default=1.0)")
-			 .hasArg()
-			 .withArgName("FLOAT")
-			 .create() );
-      options.addOption( OptionBuilder
-			 .withLongOpt("lambda_hetero")
-			 .withDescription("(Random Effects) User-specified lambda for heterogeneity part (default=1.0)")
-			 .hasArg()
-			 .withArgName("FLOAT")
-			 .create() );
-      options.addOption( OptionBuilder
-			 .withLongOpt("mvalue")
-			 .withDescription("Compute m-value (default=false)")
-			 .create() );
-      options.addOption( OptionBuilder
-			 .withLongOpt("mvalue_prior_sigma")
-			 .withDescription("Sigma value for normal prior N(0, sigma^2) for effect (default=0.2)")
-			 .hasArg()
-			 .withArgName("FLOAT")
-			 .create() );
-      options.addOption( OptionBuilder
-			 .withLongOpt("mvalue_prior_beta")
-			 .withDescription("Alpha and Beta value for Beta dist prior Betadist(alpha,beta) for existence of effect (default=1.0,1.0)")
-			 .hasArgs()
-			 .withArgName("ALPHA BETA")
-			 .create() );
-      options.addOption( OptionBuilder
-			 .withLongOpt("mvalue_p_thres")
-			 .withDescription("Compute m-values only for SNPs whose FE or RE2 p-value is below this threshold (default=1E-7)")
-			 .hasArg()
-			 .withArgName("FLOAT")
-			 .create() );
-      options.addOption( OptionBuilder
-			 .withLongOpt("mvalue_method")
-			 .withDescription("Which method to use to calculate m-value between 'exact' and 'mcmc' (default=exact)")
-			 .hasArg()
-			 .withArgName("METHOD_NAME")
-			 .create() );
-      options.addOption( OptionBuilder
-			 .withLongOpt("mcmc_sample")
-			 .withDescription("(MCMC) Number of samples (default=10,000)")
-			 .hasArg()
-			 .withArgName("INT")
-			 .create() );
-      options.addOption( OptionBuilder
-			 .withLongOpt("mcmc_burnin")
-			 .withDescription("(MCMC) Number of burn-in (default=1,000)")
-			 .hasArg()
-			 .withArgName("INT")
-			 .create() );
-      options.addOption( OptionBuilder
-			 .withLongOpt("mcmc_prob_random_move")
-			 .withDescription("(MCMC) Probability that a complete randomization move is suggested (default=0.01)")
-			 .hasArg()
-			 .withArgName("FLOAT")
-			 .create() );
-      options.addOption( OptionBuilder
-			 .withLongOpt("mcmc_max_num_flip")
-			 .withDescription("(MCMC) Usual move is flipping N bits where N ~ U(1,max_num_flip). If an integer value i >= 1 is given, max_num_flip = i. If a float value 0 < k < 1 is given, max_num_flip = k * #studies. (default=0.1)")
-			 .hasArg()
-			 .withArgName("INT or FLOAT")
-			 .create() );
-      options.addOption( OptionBuilder
-			 .withLongOpt("binary_effects")
-			 .withDescription("Compute binary effects model p-value (default=false)")
-			 .create() );
-      options.addOption( OptionBuilder
-			 .withLongOpt("binary_effects_sample")
-			 .withDescription("(Binary effects) Number of importance sampling samples (default=1,000)")
-			 .hasArg()
-			 .withArgName("INT")
-			 .create() );
-      options.addOption( OptionBuilder
-			 .withLongOpt("binary_effects_large")
-			 .withDescription("(Binary effects) Large number of importance sampling samples for p-values above threshold (default=100,000)")
-			 .hasArg()
-			 .withArgName("INT")
-			 .create() );
-      options.addOption( OptionBuilder
-			 .withLongOpt("binary_effects_p_thres")
-			 .withDescription("(Binary effects) P-value threshold determining if we will use large number of samples (default=1E-4)")
-			 .hasArg()
-			 .withArgName("FLOAT")
-			 .create() );
-      options.addOption( OptionBuilder
-			 .withLongOpt("seed")
-			 .withDescription("Random number generator seed (default=0)")
-			 .hasArg()
-			 .withArgName("INT")
-			 .create() );
-      options.addOption( OptionBuilder
-			 .withLongOpt("verbose")
-			 .withDescription("Print RSID verbosely per every 1,000 SNPs (default=false)")
-			 .create() );
-      options.addOption( OptionBuilder
-			 .withLongOpt("help")
-			 .withDescription("Print help")
-			 .create() );
-      // Parsing
-      try {
-	 CommandLine line = parser.parse(options, args);
-	 inputFile_ = line.getOptionValue("input");
-	 if (line.hasOption("output")) {
-	    outputFile_ = line.getOptionValue("output");
-	 }
-	 if (line.hasOption("pvalue_table")) {
-	    pvalueTableFile_ = line.getOptionValue("pvalue_table");
-	 }
-	 if (line.hasOption("log")) {
-	    logFile_ = line.getOptionValue("log");
-	 }
-	 if (line.hasOption("lambda_mean")) {
-	    inputLambdaMeanEffect_ = Double.valueOf(line.getOptionValue("lambda_mean"));
-	 }
-	 if (line.hasOption("lambda_hetero")) {
-	    inputLambdaHeterogeneity_ = Double.valueOf(line.getOptionValue("lambda_hetero"));
-	 }
-	 if (line.hasOption("mvalue")) {
-	    willComputeMvalue_ = true;
-	    if (line.hasOption("mvalue_prior_sigma")) {
-	       priorSigma_ = Double.valueOf(line.getOptionValue("mvalue_prior_sigma"));
-	    }
-	    if (line.hasOption("mvalue_prior_beta")) {
-	       String[] c = line.getOptionValues("mvalue_prior_beta");
-	       if (c.length < 2) {
-		  printErrorAndQuit("Two arguments are needed for mvalue_prior_beta option");
-	       }
-	       priorAlpha_ = Double.valueOf(c[0]);
-	       priorBeta_  = Double.valueOf(c[1]);
-	    }
-	    if (line.hasOption("mvalue_p_thres")) {
-	       mvaluePvalueThreshold_ = Double.valueOf(line.getOptionValue("mvalue_p_thres"));
-	    }
-	    if (line.hasOption("mvalue_method")) {
-	       mvalueMethod_ = line.getOptionValue("mvalue_method");
-	    }
-	    if (mvalueMethod_.equals("mcmc")) {
-	       if (line.hasOption("mcmc_sample")) {
-		  mcmcSample_ = Long.valueOf(line.getOptionValue("mcmc_sample"));
-	       }
-	       if (line.hasOption("mcmc_burnin")) {
-		  mcmcBurnin_ = Long.valueOf(line.getOptionValue("mcmc_burnin"));
-	       }
-	       if (line.hasOption("mcmc_prob_random_move")) {
-		  mcmcProbRandom_ = Double.valueOf(line.getOptionValue("mcmc_prob_random_move"));
-	       }
-	       if (line.hasOption("mcmc_max_num_flip")) {
-		  mcmcMaxNumFlip_ = Double.valueOf(line.getOptionValue("mcmc_max_num_flip"));
-	       }
-	    }
-	 }
-	 if (line.hasOption("binary_effects")) {
-	    willComputeBinaryEffects_ = true;
-	    if (line.hasOption("binary_effects_sample")) {
-	      binaryEffectsSample_ = Long.valueOf(line.getOptionValue("binary_effects_sample"));	       
-	    }
-	    if (line.hasOption("binary_effects_large")) {
-	      binaryEffectsLargeSample_ = Long.valueOf(line.getOptionValue("binary_effects_large"));	       
-	    }
-	    if (line.hasOption("binary_effects_p_thres")) {
-	      binaryEffectsPvalueThreshold_ = Double.valueOf(line.getOptionValue("binary_effects_p_thres"));	       
-	    }
-	 }
-	 if (line.hasOption("seed")) {
-	    seed_ = Integer.valueOf(line.getOptionValue("seed"));
-	 }
-	 if (line.hasOption("verbose")) {
-	    isVerbose_ = true;
-	 }
-	 if (line.hasOption("help")) {
-	    HelpFormatter formatter = new HelpFormatter();
-	    formatter.setLongOptPrefix("-");
-	    formatter.setWidth(100);
-	    formatter.setOptionComparator(null);
-	    formatter.printHelp("java -jar Metasoft.jar [options]",options);
-	    System.out.println("------------------------------------------------");
-	    System.out.println("The format of input_file:");
-	    System.out.println("  Each row is each SNP.");
-	    System.out.println("  1st column is RSID.");
-	    System.out.println("  2nd and 3rd column are beta and its standard error for 1st study.");
-	    System.out.println("  4th and 5th column are beta and its standard error for 2nd study.");
-	    System.out.println("  6th and 7th column are beta and its standard error for 3rd study.");
-	    System.out.println("  and so on...");
-	    System.out.println("------------------------------------------------");
-	    System.out.println();
-	    System.exit(-1);
-	 }
-      } catch (ParseException exp) {
-	 printErrorAndQuit(exp.getMessage()+
-			   "\nPlease type 'java -jar Metasoft.jar -help' to see a list of options");
-      }
-      // Manual argument validity checkup
-      System.err.println("-------- Processing arguments ---------");
-      if (inputFile_.equals("")) {
-	 printErrorAndQuit("A valid input file must be specified using option -input");
-      }
-      if (inputLambdaMeanEffect_ <= 0.0) {
-	 printErrorAndQuit("lambda_mean option takes a float value > 0");
-      }
-      if (inputLambdaHeterogeneity_ <= 0.0) {
-	 printErrorAndQuit("lambda_hetero option takes a float value > 0");
-      }
-      if (priorSigma_ <= 0.0) {
-	 printErrorAndQuit("mvalue_prior_sigma option takes a float value > 0");
-      }
-      if (priorAlpha_ <= 0.0 || priorBeta_ <= 0.0) {
-	 printErrorAndQuit("mvalue_prior_beta option takes two float values > 0");
-      }
-      if (mvaluePvalueThreshold_ < 0.0 || mvaluePvalueThreshold_ > 1.0) {
-	 printErrorAndQuit("mvalue_p_thres takes a float value between 0 and 1");
-      }
-      if (!mvalueMethod_.equals("exact") &&
-	  !mvalueMethod_.equals("mcmc")  &&
-	  !mvalueMethod_.equals("variational")) {
-	 printErrorAndQuit("mvalue_method option only takes a value 'exact' or 'mcmc'");
-      }
-      if (mcmcSample_ < 1) {
-	 printErrorAndQuit("mcmc_sample option takes an integer value > 0");
-      }
-      if (mcmcBurnin_ < 1) {
-	 printErrorAndQuit("mcmc_burnin option takes an integer value > 0");
-      }
-      if (mcmcSample_ < mcmcBurnin_) {
-	 printErrorAndQuit("mcmc_sample must be larger than mcmc_burnin");
-      }
-      if (mcmcProbRandom_ < 0.0 || mcmcProbRandom_ > 1.0) {
-	 printErrorAndQuit("mcmc_prob_random takes a float value between 0 and 1");
-      }
-      if (mcmcMaxNumFlip_ <= 0.0) {
-	 printErrorAndQuit("mcmc_max_num_flip takes a value > 0");
-      }
-      if (binaryEffectsSample_ < 1) {
-	 printErrorAndQuit("binary_effects_sample option takes an integer value > 0");
-      }
-      if (binaryEffectsLargeSample_ < 1) {
-	 printErrorAndQuit("binary_effects_large option takes an integer value > 0");
-      }
-      if (binaryEffectsPvalueThreshold_ < 0.0 || binaryEffectsPvalueThreshold_ > 1.0) {
-	 printErrorAndQuit("binary_effects_p_thres takes a float value between 0 and 1");
-      }
-      // Make summary for printing
-      argsSummary_ = "";
-      for (String s: args) {
-	 argsSummary_ += " " + s;
-      }
-      argsSummary_ += "\n";
-   }
-
    private static void printErrorAndQuit(String msg) {
       System.err.println(msg);
       System.exit(-1);

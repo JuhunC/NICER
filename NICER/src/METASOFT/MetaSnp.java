@@ -916,6 +916,7 @@ public class MetaSnp
 	 if (isNa_.get(i)) {
 	    printWriter.printf("NA\t");
 	 } else {
+		 
 	    if (isMvaluesComputed_) {
 	       printWriter.printf("%.3f\t", getMvalue(j));
 	    } else {
