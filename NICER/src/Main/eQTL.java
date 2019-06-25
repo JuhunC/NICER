@@ -98,23 +98,22 @@ public class eQTL extends HttpServlet {
 	/*	RequestDispatcher view = request.getRequestDispatcher("index.html");
 		view.forward(request, response); */
 	
-		Process a_0 = null;
 		try {
 			
-			if(a_0 == null) {
-				a_0 = Runtime.getRuntime().exec("/home/ktg/NICE/eQTLmap4 -g "
+			
+				Process a_0 = Runtime.getRuntime().exec(Setup.NICEdir+"/eQTLmap4 -g "
 						+ userDirString + "/y_pos.txt -s " + userDirString + "/x_pos.txt -p " 
 					     + userDirString + "/p_value.txt -m 2.5 -M 5 -o " + userDirString + "/eQTL.png -z 2");
 				
 				a_0.waitFor();
-			}
-			   	String _tmp = Setup.FileSaveDirectory+emailAddress+"/"+strDate+"/eQTL.png";
+
+			   	String _tmp = userDirString+"/eQTL.png";//Setup.FileSaveDirectory+emailAddress+"/"+strDate+"/eQTL.png";
 			   	// send email
 			   	NICEServlet.sendResultMail(Setup.FileSaveDirectory+emailAddress+"/"+strDate,
 			   			"/eQTL.png",emailAddress, 0);
 			   	
 			   	_tmp = _tmp.replace("/", Setup.urlencode);
-				String address = "http://210.94.194.52:8080/NICER/Download?file="+_tmp;
+				String address = "http://"+Setup.ipAddr+"/NICER/Download?file="+_tmp;
 								
 				response.setContentType("text/html; charset=euc-kr");
 				StringBuffer tet = new StringBuffer();

@@ -80,5 +80,5 @@ for(i in c(1:snpNum)){
 	P[i,]=t(read.table(paste(out,"/NICE_temp/P_",i,".txt",sep="")))
 }
 unlink(paste(out,"/NICE_temp",sep=""), recursive=TRUE)
-file.remove(paste(pheno,"_t",sep=""))
+#file.remove(paste(pheno,"_t",sep=""))
 write.table(P, paste(out,"/NICE.txt",sep=""),row.names=FALSE, col.names=FALSE,quote=FALSE)

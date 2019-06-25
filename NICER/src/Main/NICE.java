@@ -14,6 +14,7 @@ public class NICE {
 	public String email_dir;
 	private int thr_num; // total number of threads(1,2,...)
 	private Thread[] thr;
+	private int tl_snp_cnt=0;
 	private final int FORCE_THREAD = 0; // Force Thread Number(not to force <= 0)
 	NICE(String emailaddr, HttpServletRequest request){
 		// create directory
@@ -34,6 +35,7 @@ public class NICE {
 		}
 		 
 		email_dir += getCurrentStrDate()+"/";// append date within email address 
+//		email_dir += "2019-04-07_13-17-53/";
 		userDir = new File(email_dir);
 		userDir.mkdir();
 	}
@@ -42,7 +44,8 @@ public class NICE {
 		
 		// count lines for each thr
 		int x_cnt = countXfile(x_file.getAbsolutePath());
-		int thr_ln_x = x_cnt / thr_num +1;
+		tl_snp_cnt = x_cnt;
+		int thr_ln_x = x_cnt / thr_num;
 		
 		divideXfile(thr_ln_x);
 		
@@ -88,7 +91,7 @@ public class NICE {
 	private void createNrunThread() {
 		thr = new Thread[thr_num];
 		for(int i =0;i<thr_num;i++) {
-			thr[i] = new Thread(new NICE_Runnable(i+1, email_dir));
+			thr[i] = new Thread(new NICE_Runnable(i+1, email_dir,thr_num));
 			thr[i].start();
 		}
 	}
@@ -103,7 +106,7 @@ public class NICE {
 			BufferedWriter bw = new BufferedWriter(new FileWriter(email_dir+"/"+thr_cnt+"/X.txt"));
 			for(int i =0;i<ttl_ln;i++) {
 				tmp = br.readLine();
-				if(i!=0  && i%(ttl_ln/thr_num)==0) {
+				if(i!=0  && i%ln_cnt==0) {
 					System.out.println(i);
 					bw.close();
 					thr_cnt++;

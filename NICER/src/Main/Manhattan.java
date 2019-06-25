@@ -155,7 +155,7 @@ public class Manhattan extends HttpServlet {
 				
 				a_0_2.waitFor();	
 				
-				String _tmp = Setup.FileSaveDirectory+emailAddress+"/"+strDate+"/manhattan.png";
+				String _tmp = userDirString+"/manhattan.png";
 				
 				_tmp = _tmp.replace("/",Setup.urlencode);
 				String address = "http://"+Setup.ipAddr+"/NICER/Download?file="+_tmp;

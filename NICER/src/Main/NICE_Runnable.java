@@ -3,11 +3,13 @@ package Main;
 import METASOFT.*;;
 public class NICE_Runnable implements Runnable {
 	private int thr_num;
+	private int tl_thr_num;
 	private String email_dir;
 	private int snp_cnt;
 	private int pheno_cnt;
 	private int ind_cnt;
-	NICE_Runnable(int thr_num_, String email_dir_){
+	NICE_Runnable(int thr_num_, String email_dir_,int tl_thr_num){
+		this.tl_thr_num = tl_thr_num;
 		thr_num = thr_num_;
 		email_dir = email_dir_;
 	}
@@ -45,18 +47,21 @@ public class NICE_Runnable implements Runnable {
 	}
 	private void runStage2() {
 		try {
-//			Process ps = Runtime.getRuntime().exec("java -Xmx2048m -jar "+Setup.NICEdir+"/Metasoft.jar -input "+ email_dir+thr_num + "/inputMS.txt -mvalue -mvalue_method mcmc -mcmc_sample 1000000 -seed 0 -mvalue_p_thres 1.0 -mvalue_prior_sigma 0.05 -mvalue_prior_beta 1 5 -pvalue_table "+Setup.NICEdir+"/HanEskinPvalueTable.txt -output "+ email_dir +thr_num +"/posterior.txt");
-//			ps.waitFor();
+			if(snp_cnt*tl_thr_num > 1000) {
+			Process ps = Runtime.getRuntime().exec("java -Xmx2048m -jar "+Setup.NICEdir+"/Metasoft.jar -input "+ email_dir+thr_num + "/inputMS.txt -mvalue -mvalue_method mcmc -mcmc_sample 1000000 -seed 0 -mvalue_p_thres 1.0 -mvalue_prior_sigma 0.05 -mvalue_prior_beta 1 5 -pvalue_table "+Setup.NICEdir+"/HanEskinPvalueTable.txt -output "+ email_dir +thr_num +"/posterior.txt");
+			ps.waitFor();
 //			String args[] = {" -input ",email_dir+thr_num + "/inputMS.txt",
 //			"-mvalue", "-mvalue_method","mcmc",
 //			"-mcmc_sample","1000000","-seed","0","-mvalue_p_thres","1.0","-mvalue_prior_sigma","0.05",
 //			"-mvalue_prior_beta","1","5",
 //			"-pvalue_table",Setup.NICEdir+"/HanEskinPvalueTable.txt",
 //			"-output",email_dir+thr_num +"/posterior.txt"};
-			Metasoft ms = new Metasoft(email_dir+thr_num+"/inputMS.txt",
-					Setup.NICEdir+"/HanEskinPvalueTable.txt",
-					email_dir+thr_num+"/posterior.txt",
-					email_dir+thr_num+"log.txt");
+			}else {
+				Metasoft ms = new Metasoft(email_dir+thr_num+"/inputMS.txt",
+						Setup.NICEdir+"/HanEskinPvalueTable.txt",
+						email_dir+thr_num+"/posterior.txt",
+						email_dir+thr_num+"log.txt");
+			}
 			System.out.println("Thread "+thr_num+" has finished Stage 2");
 		}catch(Exception e) {
 			NICE.printERROR("Error for Thread "+thr_num+"\t While running Stage2!!!");
