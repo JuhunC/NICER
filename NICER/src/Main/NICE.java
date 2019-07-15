@@ -15,7 +15,7 @@ public class NICE {
 	private int thr_num; // total number of threads(1,2,...)
 	private Thread[] thr;
 	private int tl_snp_cnt=0;
-	private final int FORCE_THREAD = 0; // Force Thread Number(not to force <= 0)
+	private final int FORCE_THREAD = 1; // Force Thread Number(not to force <= 0)
 	NICE(String emailaddr, HttpServletRequest request){
 		// create directory
 		email_dir = Setup.FileSaveDirectory + emailaddr+"/";
