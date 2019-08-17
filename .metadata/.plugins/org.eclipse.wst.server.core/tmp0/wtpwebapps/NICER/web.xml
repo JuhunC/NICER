@@ -7,7 +7,10 @@ id="WebApp_ID" version="3.1">
   <welcome-file-list>
     <welcome-file>index.html</welcome-file>
   </welcome-file-list>
-
+	<servlet>
+		<servlet-name>Download</servlet-name>
+		<servlet-class>Main.Download</servlet-class>
+	</servlet>
 	<servlet>
 	    <servlet-name>GAMMAServlet</servlet-name>
 	    <servlet-class>Main.GAMMAServlet</servlet-class>
