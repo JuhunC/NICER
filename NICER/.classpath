@@ -39,5 +39,6 @@
 	<classpathentry kind="lib" path="/home/johnc/Desktop/NICER/apache-tomcat-9.0.17/lib/tomcat-util-scan.jar"/>
 	<classpathentry kind="lib" path="/home/johnc/Desktop/NICER/apache-tomcat-9.0.17/lib/tomcat-websocket.jar"/>
 	<classpathentry kind="lib" path="/home/johnc/Desktop/NICER/apache-tomcat-9.0.17/lib/websocket-api.jar"/>
+	<classpathentry kind="lib" path="/home/johnc/Desktop/NICER/apache-tomcat-9.0.17/lib/cos.jar"/>
 	<classpathentry kind="output" path="build/classes"/>
 </classpath>

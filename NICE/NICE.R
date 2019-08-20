@@ -62,23 +62,9 @@ for (i in c(1:snpNum)){                                         # for each snp, 
                 write.table(t(X[ ,i]), paste(out,"/NICE_temp/X_",i,".txt",sep=""), row.names=F, col.names=F)
 	 	write.table(Ki, paste(out,"/NICE_temp/K_",i,".txt",sep=""), row.names=F, col.names=F)
 		system(paste(NICE,"/emma ", geneNum," 1 ",indiNum," ", pheno,"_t " ,out,"/NICE_temp/X_",i,".txt ",out,"/NICE_temp/K_",i,".txt ", out,"/NICE_temp/P_",i,".txt",sep=""))
-
-       }
-}
-for(i in c(1:snpNum)){
-        while(!file.exists(paste(out,"NICE_temp/P_",i,".txt",sep=""))){
-		nonSigGenes = which(M[i,] < MvalueThreshold)
-		if((length(nonSigGenes)>=minGeneNumber)&&length(nonSigGenes)>=10){
-			print(paste("redo",i,sep=""))
-			Yi = t(Y[,nonSigGenes])
-			Xi = t(X[,i])
-			Ki = cov(normMe(Yi))
-			write.table(t(X[,i]), paste(out,"/NICE_temp/X_",i,".txt",sep=""), row.names=F,col.names=F)
-			write.table(Ki,paste(out,"/NICE_temp/K_",i,".txt", sep=""),row.names=F, col.names=F)
-			system(paste(NICE,"/emma ",geneNum," 1 ", indiNum," ", pheno, "_t ", out , "/NICE_temp/X_",i,".txt ", out, "/NICE_temp/K_",i,".txt ",out,"/NICE_temp/P_",i,".txt",sep=""))			}
-	}
-	P[i,]=t(read.table(paste(out,"/NICE_temp/P_",i,".txt",sep="")))
+		P[i,]=t(read.table(paste(out,"/NICE_temp/P_",i,".txt",sep="")))
+        }
 }
 unlink(paste(out,"/NICE_temp",sep=""), recursive=TRUE)
-#file.remove(paste(pheno,"_t",sep=""))
+file.remove(paste(pheno,"_t",sep=""))
 write.table(P, paste(out,"/NICE.txt",sep=""),row.names=FALSE, col.names=FALSE,quote=FALSE)

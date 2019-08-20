@@ -89,7 +89,7 @@ public class NICE_Runnable implements Runnable {
 		String snps = snp_cnt+" ";
 		String indiv = ind_cnt+" ";
 		try {
-			Process ttest = Runtime.getRuntime().exec(Setup.NICEdir+"/t_test_static "
+			Process ttest = Runtime.getRuntime().exec(Setup.NICEdir+"t_test_static "
 					+ phenos + snps + indiv + email_dir + "/Y.txt " + email_dir+thr_num+"/X.txt" + " "   
 				     + email_dir+thr_num + "/p_ttest.txt");
 			ttest.waitFor();

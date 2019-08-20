@@ -6,8 +6,10 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Vector;
 
+import javax.servlet.annotation.MultipartConfig;
 import javax.servlet.http.*;
 
+@MultipartConfig(maxFileSize = -1, maxRequestSize = -1,location =Setup.FileSaveDirectory)
 public class NICE {
 	private File x_file; // SNP file
 	private File y_file; // Pheno file
