@@ -50,7 +50,6 @@ public class NICEServlet extends HttpServlet {
 		String emailAddress = request.getParameter("emailAddress");
 		String thr_num = request.getParameter("set_num"); //set the number of thread
 		
-		
 		start_t = System.currentTimeMillis();	// for calculate working time
 
 		NICE nice = new NICE(emailAddress,request);

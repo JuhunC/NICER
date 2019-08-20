@@ -206,7 +206,12 @@ public class NICE {
 			 downloadXY(request);
 		 }else if(input_type_str.equals("type3")) {
 			 downloadTransposedXY(request);
+		 }else if(input_type_str.equals("type4")){
+			 downloadVCF(request);
 		 }
+	}
+	private void downloadVCF(HttpServletRequest request) {
+		
 	}
 	private void downloadTransposedXY(HttpServletRequest request) {
 		// Upload SNP file	
