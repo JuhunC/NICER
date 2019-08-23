@@ -11,7 +11,6 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-
 import hihi.GoogleAuthentication;
 /**
  * Servlet implementation class NICEServlet
@@ -48,14 +47,13 @@ public class NICEServlet extends HttpServlet {
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
 
-		Enumeration params = request.getParameterNames();
-		System.out.println("----------------------------");
-		while (params.hasMoreElements()){
-		    String name = (String)params.nextElement();
-		    System.out.println(name + " : " +request.getParameter(name));
-		}
-		System.out.println("----------------------------");
-		
+//		Enumeration params = request.getParameterNames();
+//		System.out.println("----------------------------");
+//		while (params.hasMoreElements()){
+//		    String name = (String)params.nextElement();
+//		    System.out.println(name + " : " +request.getParameter(name));
+//		}
+//		System.out.println("----------------------------");
 		String input_type_str = request.getParameter("tabss");
 		String emailAddress = request.getParameter("emailAddress");
 		String thr_num = request.getParameter("set_num"); //set the number of thread

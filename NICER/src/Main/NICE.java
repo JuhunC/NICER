@@ -8,6 +8,7 @@ import java.util.Vector;
 
 import javax.servlet.annotation.MultipartConfig;
 import javax.servlet.http.*;
+import javax.servlet.http.Part;
 
 @MultipartConfig(maxFileSize = -1, maxRequestSize = -1,location =Setup.FileSaveDirectory)
 public class NICE {
@@ -17,7 +18,7 @@ public class NICE {
 	private int thr_num; // total number of threads(1,2,...)
 	private Thread[] thr;
 	private int tl_snp_cnt=0;
-	private final int FORCE_THREAD = 1; // Force Thread Number(not to force <= 0)
+	private final int FORCE_THREAD = 0; // Force Thread Number(not to force <= 0)
 	NICE(String emailaddr, HttpServletRequest request){
 		// create directory
 		email_dir = Setup.FileSaveDirectory + emailaddr+"/";
@@ -213,7 +214,41 @@ public class NICE {
 		 }
 	}
 	private void downloadVCF(HttpServletRequest request) {
-		
+		try {
+			Part part = request.getPart("VCFfile");
+			File x = new File(email_dir+"/VCF.vcf");
+			try (InputStream inputStream = part.getInputStream()){
+				Files.copy(inputStream, x.toPath());
+			}
+			Part part1 = request.getPart("Expfile");
+			File y = new File(email_dir+"/input_y.txt");
+			try (InputStream inputStream= part1.getInputStream()) { // save uploaded file
+				Files.copy(inputStream, y.toPath());
+			}
+			
+			Process vcf_data = null;
+			//--vcf test.vcf --allow-extra-chr --no-fid --no-parents --no-sex --no-pheno --out test
+			vcf_data = Runtime.getRuntime().exec(Setup.PLINKdir+" --vcf " + email_dir + "/VCF.vcf --allow-extra-chr --no-fid --no-parents --no-sex --no-pheno --out "+email_dir+"/input_f");
+			vcf_data.waitFor();
+			
+			Process plink_data = null;
+			plink_data = Runtime.getRuntime().exec(Setup.PLINKdir+" --bfile " + email_dir + "/input_f --allow-extra-chr --recodeA --noweb --maf 0.3 --out "+email_dir+"/input_x");
+			plink_data.waitFor();
+			
+			Process pl_to_input = null; //x data
+			pl_to_input = Runtime.getRuntime().exec(Setup.NICEdir+"/pl_to_input " + email_dir);
+			pl_to_input.waitFor();
+			
+			Process pl_to_input_y = null; // y data
+			pl_to_input_y = Runtime.getRuntime().exec(Setup.NICEdir+"pl_to_input_y " + email_dir);
+			pl_to_input_y.waitFor();
+			
+			// X_rightdim -> X.txt Y_rightdim -> Y.txt
+			transposeFile(email_dir+"/X_rightdim.txt",email_dir+"/X.txt");
+			transposeFile(email_dir+"/Y_rightdim.txt",email_dir+"/Y.txt");	
+		}catch(Exception e) {
+			e.printStackTrace();
+		}
 	}
 	private void downloadTransposedXY(HttpServletRequest request) {
 		// Upload SNP file	
@@ -284,7 +319,7 @@ public class NICE {
 				Files.copy(inputStream, file_3.toPath());
 			}	
 			Process plink_data = null;
-			plink_data = Runtime.getRuntime().exec("/home/ktg/plink/plink --bfile " + email_dir + "/input_f --recodeA --noweb --maf 0.3 --out "+email_dir+"/input_x");
+			plink_data = Runtime.getRuntime().exec(Setup.PLINKdir+" --bfile " + email_dir + "/input_f --recodeA --noweb --maf 0.3 --out "+email_dir+"/input_x");
 			plink_data.waitFor();
 			
 			Process pl_to_input = null; //x data
