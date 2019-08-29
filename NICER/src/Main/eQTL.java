@@ -114,7 +114,7 @@ public class eQTL extends HttpServlet {
 			   	
 			   	_tmp = _tmp.replace("/", Setup.urlencode);
 				String address = "http://"+Setup.ipAddr+"/NICER/Download?file="+_tmp;
-								
+				System.out.println(address + "123456");				
 				response.setContentType("text/html; charset=euc-kr");
 				StringBuffer tet = new StringBuffer();
 				tet.append("<script language='javascript'>");

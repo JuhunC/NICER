@@ -130,26 +130,51 @@ public class Manhattan extends HttpServlet {
 				File manhattan = new File(userDirString + "/man.R");
 				FileWriter fw = new FileWriter(manhattan, true);
 				System.out.println(num1+"\t"+num2);
-				fw.write("library(qqman)\n" +
-						 "x = as.matrix(read.table(\"" + file.getPath() + "\"))\n" +
-						 "x1 = array(,c("+ num1 +"),)\n" + 
-						 "x2 = 1:"+ num1 +"\n" + 
-						 "x3 = array(,c("+ num1 +"),)\n" + 
-						 "x4 = array(,c("+ num1 +"),)\n" +
-						 "for(i in 1:"+ num1 +"){\n" + 
-						 "x1 = paste(c(\"rs\",i), collapse=\"\")\n" + 
-						 "x3[i] = 1\n");
-				if(median == true) {
-					fw.write("x4[i] = median(-log10(x[i,]))\n");			
-				}else {
-					fw.write("x4[i] = mean(-log10(x[i,]))\n");
-				}
-				fw.write("}\n" + 
-						 "data <-data.frame(SNP=x1,CHR=x2,BP=x3, P=x4)\n" + 
-						 "png(\""+ userDirString +"/manhattan.png"+"\", width=2000, height=1000, pointsize=18)\n" + 
-						 "manhattan(data)\n" + 
-						 "dev.off()\n");
+				fw.write(//"install.packages(\"dplyr\")\n" + 
+						"library(dplyr)\n" + 
+						"\n" + 
+						//"install.packages(\"data.table\")\n" + 
+						"library(data.table)\n" + 
+						"\n" + 
+						"p_full <- fread(\""+file.getPath()+"\") %>% as.matrix\n" + 
+						"sum(p_full == 0)\n" + 
+						"\n" + 
+						"\n" + 
+						"log10p_full <- -log10(p_full)\n" + 
+						"sum(log10p_full == Inf)\n" + 
+						"\n" + 
+						"\n" + 
+						"log10p_full[log10p_full == Inf] <- max(log10p_full[log10p_full != Inf])\n" + 
+						"\n" + 
+						"sum(is.infinite(log10p_full))\n" + 
+						"\n" + 
+						"mean_p <- rowMeans(log10p_full)\n" + 
+						"mean_p %>% length\n" + 
+						"mean_p %>% head\n" + 
+						"png(\""+userDirString +"/manhattan.png"+"\", width=2000, height=1000, pointsize=18)\n" + 
+						"plot(mean_p)\n" + 
+						"dev.off()\n");
 				fw.close();
+//				fw.write("library(qqman)\n" +
+//						 "x = as.matrix(read.table(\"" + file.getPath() + "\"))\n" +
+//						 "x1 = array(,c("+ num1 +"),)\n" + 
+//						 "x2 = 1:"+ num1 +"\n" + 
+//						 "x3 = array(,c("+ num1 +"),)\n" + 
+//						 "x4 = array(,c("+ num1 +"),)\n" +
+//						 "for(i in 1:"+ num1 +"){\n" + 
+//						 "x1 = paste(c(\"rs\",i), collapse=\"\")\n" + 
+//						 "x3[i] = 1\n");
+//				if(median == true) {
+//					fw.write("x4[i] = median(-log10(x[i,]))\n");			
+//				}else {
+//					fw.write("x4[i] = mean(-log10(x[i,]))\n");
+//				}
+//				fw.write("}\n" + 
+//						 "data <-data.frame(SNP=x1,CHR=x2,BP=x3, P=x4)\n" + 
+//						 "png(\""+ userDirString +"/manhattan.png"+"\", width=2000, height=1000, pointsize=18)\n" + 
+//						 "manhattan(data)\n" + 
+//						 "dev.off()\n");
+//				fw.close();
 				
 				a_0_2 = Runtime.getRuntime().exec("R CMD BATCH " + manhattan.getPath());
 				
