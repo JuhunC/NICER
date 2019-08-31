@@ -4,19 +4,20 @@ NICE Renew
 
 # Prerequistes
 (suggest using Linux environment)
-1. install JRE, JDK
-2. install R language
+0. Basic instructions
+    sudo chmod -c 777 ./NICER/ -R
+    sudo yum install ld-linux.so.2
+    sudo yum install epel-release
+1. install R language
+    sudo yum install R
 3. install R 'qqman' package
 
     R command : install.packages('qqman')
 
 4. for eclipse - add all apache/lib/*.jar to the project
 
-# Main Steps(not fully added)
-    sudo chmod -c 777 ./NICE/t_test_static
-    sudo chmod -c 777 ./NICE/pl_to_input
-    sudo chmod -c 777 ./NICE/pl_to_input_y
-    sudo yum install lib/ld-linux.so.2
+    sudo chmod -c 777 ./NICER/ -R
+    sudo yum install ld-linux.so.2
     sudo yum install epel-release
     sudo yum install R
 
