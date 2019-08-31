@@ -2,7 +2,7 @@
 NICE Renew
 (other features such as GAMMA, Multitrans will be updated)
 
-# Prerequistes
+# Prerequistes for running Source Code
 (suggest using Linux environment)
 1. Basic instructions
 ```
@@ -22,6 +22,13 @@ R command : install.packages('qqman')
 ```
 add all apache/lib/*.jar to the project
 ```
+4. Change Directory Settings
+
+at
+> NICER/NCIER/src/main/Setup.java 
+
+change
+> final static String mainDir ="**set NICER folder directory here**";
 
 # For Trouble Shooting
 a. When NICE/t_test_static doesn't work!!
