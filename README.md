@@ -4,11 +4,11 @@ NICE Renew
 
 # Prerequistes
 (suggest using Linux environment)
-0. Basic instructions
+1. Basic instructions
     sudo chmod -c 777 ./NICER/ -R
     sudo yum install ld-linux.so.2
     sudo yum install epel-release
-1. install R language
+2. install R language
     sudo yum install R
 3. install R 'qqman' package
 
