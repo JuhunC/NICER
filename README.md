@@ -25,7 +25,7 @@ add all apache/lib/*.jar to the project
 4. Change Directory Settings
 
 at
-> NICER/NCIER/src/main/Setup.java 
+> NICER/NICER/src/main/Setup.java 
 
 change
 > final static String mainDir ="**set NICER folder directory here**";
