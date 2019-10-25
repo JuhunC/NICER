@@ -52,4 +52,8 @@ id="WebApp_ID" version="3.1">
     	<servlet-name>Manhattan</servlet-name>
     	<url-pattern>/Manhattan</url-pattern>
   </servlet-mapping>
+  <servlet-mapping>
+  	<servlet-name>Download</servlet-name>
+  	<url-pattern>/Download</url-pattern>
+  </servlet-mapping>
 </web-app>

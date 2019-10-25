@@ -6,7 +6,7 @@ public class GoogleAuthentication extends Authenticator{
 	PasswordAuthentication passAuth;
 	
 	public GoogleAuthentication() {
-		passAuth = new PasswordAuthentication("taegun89@gmail.com", "fxbagyrimuybqipt");
+		passAuth = new PasswordAuthentication("taegun89@gmail.com", "vrbeimnesqvsgbev");
 	}
 	
 	public PasswordAuthentication getPasswordAuthentication() {

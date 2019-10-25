@@ -26,9 +26,11 @@ public class NICE_Runnable implements Runnable {
 	}
 	private void runStage3() {
 		try {
+			String cp_cmd = "cp "+email_dir+"/Y_rightdim.txt "+email_dir+thr_num+"/Y_rightdim.txt";
+			Process cp_proc = Runtime.getRuntime().exec(cp_cmd);
 			String cmd = "R CMD BATCH --args "
 					+"-snp="+ email_dir+thr_num +"/X_rightdim.txt "
-					+"-pheno="+email_dir+"/Y_rightdim.txt -MvalueThreshold=0.5 "
+					+"-pheno="+email_dir+thr_num+"/Y_rightdim.txt -MvalueThreshold=0.5 "
 					+"-Mvalue="+email_dir+thr_num+"/posterior.txt -minGeneNumber=10 "
 					+"-Pdefault="+ email_dir+thr_num +"/p_ttest.txt "
 					+"-out="+email_dir+thr_num+"/ "

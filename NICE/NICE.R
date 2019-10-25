@@ -61,6 +61,7 @@ for (i in c(1:snpNum)){                                         # for each snp, 
 		Ki = cov(normMe(Yi))
                 write.table(t(X[ ,i]), paste(out,"/NICE_temp/X_",i,".txt",sep=""), row.names=F, col.names=F)
 	 	write.table(Ki, paste(out,"/NICE_temp/K_",i,".txt",sep=""), row.names=F, col.names=F)
+		destfile = paste(NICE,"/NICE_temp/P_",i,".txt",sep="")
 		system(paste(NICE,"/emma ", geneNum," 1 ",indiNum," ", pheno,"_t " ,out,"/NICE_temp/X_",i,".txt ",out,"/NICE_temp/K_",i,".txt ", out,"/NICE_temp/P_",i,".txt",sep=""))
 		P[i,]=t(read.table(paste(out,"/NICE_temp/P_",i,".txt",sep="")))
         }
