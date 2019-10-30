@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
-	<classpathentry kind="src" path=""/>
-	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="lib" path="/home/joohun484/Desktop/NICER/apache-tomcat-9.0.17/lib/annotations-api.jar"/>
 	<classpathentry kind="lib" path="/home/joohun484/Desktop/NICER/apache-tomcat-9.0.17/lib/catalina.jar"/>
 	<classpathentry kind="lib" path="/home/joohun484/Desktop/NICER/apache-tomcat-9.0.17/lib/catalina-ant.jar"/>
@@ -41,5 +40,6 @@
 	<classpathentry kind="lib" path="/home/joohun484/Desktop/NICER/apache-tomcat-9.0.17/lib/tomcat-util-scan.jar"/>
 	<classpathentry kind="lib" path="/home/joohun484/Desktop/NICER/apache-tomcat-9.0.17/lib/tomcat-websocket.jar"/>
 	<classpathentry kind="lib" path="/home/joohun484/Desktop/NICER/apache-tomcat-9.0.17/lib/websocket-api.jar"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
