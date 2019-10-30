@@ -8,8 +8,8 @@ id="WebApp_ID" version="3.1">
     <welcome-file>index.html</welcome-file>
   </welcome-file-list>
 	<servlet>
-		<servlet-name>Download</servlet-name>
-		<servlet-class>Main.Download</servlet-class>
+		<servlet-name>DownloadServlet</servlet-name>
+		<servlet-class>src.Main.DownloadServlet</servlet-class>
 	</servlet>
 	<servlet>
 	    <servlet-name>GAMMAServlet</servlet-name>
@@ -32,6 +32,10 @@ id="WebApp_ID" version="3.1">
 	    <servlet-class>Main.Manhattan</servlet-class>
 	</servlet>
   
+	  <servlet-mapping>
+	  	<servlet-name>DownloadServlet</servlet-name>
+	  	<url-pattern>/Download</url-pattern>
+	  </servlet-mapping>
 	<servlet-mapping>
     	<servlet-name>GAMMAServlet</servlet-name>
     	<url-pattern>/GAMMA</url-pattern>
@@ -51,9 +55,5 @@ id="WebApp_ID" version="3.1">
   	<servlet-mapping>
     	<servlet-name>Manhattan</servlet-name>
     	<url-pattern>/Manhattan</url-pattern>
-  </servlet-mapping>
-  <servlet-mapping>
-  	<servlet-name>Download</servlet-name>
-  	<url-pattern>/Download</url-pattern>
   </servlet-mapping>
 </web-app>

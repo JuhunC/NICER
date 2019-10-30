@@ -18,14 +18,14 @@ import javax.servlet.http.HttpServletResponse;
 /**
  * Servlet implementation class Download
  */
-@WebServlet("/Download")
-public class Download extends HttpServlet {
+@WebServlet("/DownloadServlet")
+public class DownloadServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
     /**
      * @see HttpServlet#HttpServlet()
      */
-    public Download() {
+    public DownloadServlet() {
         super();
         // TODO Auto-generated constructor stub
     }
