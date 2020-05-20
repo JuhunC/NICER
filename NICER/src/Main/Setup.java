@@ -2,7 +2,7 @@ package Main;
 
 public class Setup {
 	// Change Here
-	final static String mainDir= "/home/joohun484/Desktop/NICER/";
+	final static String mainDir= "/Users/wd327/eclipse-workspace/NICER/";
 	
 	final static String FileSaveDirectory = mainDir+"/NICERRESULT/";
 	final static String NICEdir = mainDir+"NICE/";

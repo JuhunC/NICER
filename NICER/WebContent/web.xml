@@ -45,7 +45,7 @@ id="WebApp_ID" version="3.1">
     	<url-pattern>/MultiTrans</url-pattern>
 	</servlet-mapping>
 	<servlet-mapping>
-    	<servlet-name>NICEServlet</servlet-name>
+    	<servlet-name>NICE</servlet-name>
     	<url-pattern>/NICE</url-pattern>
   </servlet-mapping>
   	<servlet-mapping>
