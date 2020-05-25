@@ -42,7 +42,7 @@ public class Manhattan extends HttpServlet {
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
-		RequestDispatcher view = request.getRequestDispatcher("eQTL.html");
+		RequestDispatcher view = request.getRequestDispatcher("eQTL.jsp");
 		view.forward(request, response);
 		//response.getWriter().append("Served at: ").append(request.getContextPath());
 	}

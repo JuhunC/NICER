@@ -1,8 +1,11 @@
+<%@ page language="java" contentType="text/html; charset=EUC-KR"
+	pageEncoding="EUC-KR"%>
+
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
+<meta charset="EUC-KR">
 <title>NICE</title>
-<meta charset="utf-8">
 <meta name="viewport"
 	content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
@@ -25,6 +28,13 @@
 
 </head>
 <body>
+<%-- 	<script>
+		if (<%=session.getAttribute("loginId")%> == null) {
+			alert("You have to log in to use that.");
+			document.location.href = "loginForm.jsp";
+		}
+	</script> --%>
+
 	<nav
 		class="navbar navbar-expand-lg navbar-dark ftco_navbar bg-dark ftco-navbar-light"
 		id="ftco-navbar" data-aos="fade-down" data-aos-delay="500">
@@ -45,7 +55,7 @@
 						class="nav-link">GAMMA</a></li>
 					<li class="nav-item"><a href="MultiTrans_index.jsp"
 						class="nav-link">MultiTrans</a></li>
-					<li class="nav-item"><a href="NICE_index.jsp" class="nav-link">NICER</a></li>
+					<li class="nav-item"><a href="NICE.jsp" class="nav-link">NICER</a></li>
 					<li class="nav-item"><a href="eQTL.html" class="nav-link">eQTL</a></li>
 					<li class="nav-item"><a href="Manhattan.html" class="nav-link">Manhattan</a></li>
 					<li class="nav-item"><a href="Signup.html" class="nav-link">SignUp</a></li>
@@ -96,10 +106,10 @@
 		<div class="form-group" align="right">
 			<input type="button" name="Server1" value="Server1"
 				class="btn btn-primary py-3 px-5"
-				onclick="window.location.href='http://cblab.dongguk.edu:8080/NICER/NICE_index.jsp'">
+				onclick="window.location.href='http://cblab.dongguk.edu:8080/NICER/NICE.jsp'">
 			<input type="button" name="GCE1" value="GCE1"
 				class="btn btn-primary py-3 px-5"
-				onclick="window.location.href ='http://104.196.196.160:8080/NICER/NICE_index.jsp'">
+				onclick="window.location.href ='http://104.196.196.160:8080/NICER/NICE.jsp'">
 		</div>
 
 		<footer class="ftco-footer ftco-bg-dark ftco-section">
@@ -138,7 +148,7 @@
 										<table cellspacing="100%">
 											<tr>
 												<th cellspacing="50%"><input type="text"
-													placeholder=" Upload BIM file" disabled ></th>
+													placeholder=" Upload BIM file" disabled></th>
 												<th><input type="file" name="BIM_file"></th>
 											</tr>
 											<tr>
@@ -283,14 +293,16 @@
 							</div>
 						</div>
 
-						<div class="col-md-6" align ="right"
+						<div class="col-md-6" align="right"
 							style="background-image: url(images/word_cloud.png); width: 330px; height: 340px;">
-							<input type="button" name="Documentation" value="Documentation" 
+							<input type="button" name="Documentation" value="Documentation"
 								class="btn btn-primary py-3 px-5"
 								onclick="window.location.href ='http://github.com/JuhunC/NICER'">
 						</div>
 						<div align="right">
-							<a href="http://cblab.dongguk.edu:8080/NICER/Download?file=*home*joohun484*Desktop*NICER*sample_dataset.zip" target="_blank">Download Sample Dataset</a>
+							<a
+								href="http://cblab.dongguk.edu:8080/NICER/Download?file=*home*joohun484*Desktop*NICER*sample_dataset.zip"
+								target="_blank">Download Sample Dataset</a>
 						</div>
 					</div>
 				</div>

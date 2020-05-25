@@ -41,7 +41,7 @@ id="WebApp_ID" version="3.1">
     	<url-pattern>/GAMMA</url-pattern>
 	</servlet-mapping>
 	<servlet-mapping>
-    	<servlet-name>MultiTransServlet</servlet-name>
+    	<servlet-name>MultiTrans</servlet-name>
     	<url-pattern>/MultiTrans</url-pattern>
 	</servlet-mapping>
 	<servlet-mapping>
