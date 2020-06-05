@@ -96,7 +96,7 @@ public class MultiTrans_Runnable implements Runnable {
 				     + email_dir+thr_num + "/p_ttest.txt");
 			ttest.waitFor();
 		} catch (Exception e) {
-			NICE.printERROR("Error for Thread "+thr_num+"\t While running t_test_static!!!");
+			MultiTrans.printERROR("Error for Thread "+thr_num+"\t While running t_test_static!!!");
 			e.printStackTrace();
 		}
 	}

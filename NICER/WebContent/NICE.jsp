@@ -131,9 +131,9 @@
 								data-tab="tab-3" style="padding: 15px 18px">DATA2</label><br>
 
 							<div id="tab-1" class="tab-content current">
-								<form action="NICEServlet" method="post"
-									enctype="multipart/form-data">
-
+								<form action="NICEServlet" method="post">
+<!-- 									enctype="multipart/form-data">
+ -->
 									<input type="radio" name="set_num" checked="checked"
 										value="5set" /> 5set <input type="radio" name="set_num"
 										value="10set" /> 10set
@@ -169,16 +169,16 @@
 										</table>
 									</div>
 									<div class="form-group">
-										<input type="submit" name="upload" value="Submit"
+										<input type="submit" name="upload" value="submit"
 											class="btn btn-primary py-3 px-5">
 									</div>
 								</form>
 
 							</div>
 							<div id="tab-2" class="tab-content">
-								<form action="NICEServlet" method="post"
-									enctype="multipart/form-data">
-
+								<form action="NICEServlet" method="post">
+<!-- 									enctype="multipart/form-data">
+ -->
 									<input type="radio" name="set_num" checked="checked"
 										value="5set" /> 5set <input type="radio" name="set_num"
 										value="10set" /> 10set
@@ -216,9 +216,9 @@
 								</form>
 							</div>
 							<div id="tab-3" class="tab-content">
-								<form action="NICEServlet" method="post"
-									enctype="multipart/form-data">
-
+								<form action="NICEServlet" method="post">
+<!-- 									enctype="multipart/form-data">
+ -->
 									<input type="radio" name="set_num" checked="checked"
 										value="5set" /> 5set <input type="radio" name="set_num"
 										value="10set" /> 10set
@@ -256,9 +256,9 @@
 								</form>
 							</div>
 							<div id="tab-4" class="tab-content">
-								<form action="NICEServlet" method="post"
-									enctype="multipart/form-data">
-
+								<form action="NICEServlet" method="post">
+<!-- 									enctype="multipart/form-data">
+ -->
 									<input type="radio" name="set_num" checked="checked"
 										value="5set" /> 5set <input type="radio" name="set_num"
 										value="10set" /> 10set

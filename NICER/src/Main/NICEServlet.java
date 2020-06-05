@@ -36,6 +36,7 @@ public class NICEServlet extends HttpServlet {
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
+		
 		RequestDispatcher view = request.getRequestDispatcher("NICE.jsp");
 		view.forward(request, response);
 		//response.getWriter().append("Served at: ").append(request.getContextPath());
@@ -54,9 +55,12 @@ public class NICEServlet extends HttpServlet {
 //		    System.out.println(name + " : " +request.getParameter(name));
 //		}
 //		System.out.println("----------------------------");
+		
 		String input_type_str = request.getParameter("tabss");
 		String emailAddress = request.getParameter("emailAddress");
 		String thr_num = request.getParameter("set_num"); //set the number of thread
+		
+		System.out.println("이메일어드레스" + emailAddress);
 		
 		start_t = System.currentTimeMillis();	// for calculate working time
 

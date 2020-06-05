@@ -43,7 +43,7 @@ public class MultiTrans {
 		userDir.mkdir();
 	}
 	public void run(String thr_num_str) {
-		createThreadDir(thr_num_str);
+//		createThreadDir(thr_num_str);
 		
 		// count lines for each thr
 		int x_cnt = countXfile(x_file.getAbsolutePath());
@@ -296,28 +296,19 @@ public class MultiTrans {
 	}
 	private void downloadPlink(HttpServletRequest request) {
 		try {
-			Part part_00 = request.getPart("BIM_file");
-			Part part_01 = request.getPart("BED_file");
-			Part part_02 = request.getPart("FAM_file");
-			Part part_03 = request.getPart("EX_file");
+			Part part_00 = request.getPart("SNPfile");
+			Part part_01 = request.getPart("Phenotypefile");
 			
-			File file_0 = new File(email_dir+"/input_f.bim");
-			File file_1 = new File(email_dir+"/input_f.bed");
-			File file_2 = new File(email_dir+"/input_f.fam");
-			File file_3 = new File(email_dir+"/input_y.txt");
-			
+			File file_0 = new File(email_dir+"/input_f.snp");
+			File file_1 = new File(email_dir+"/input_f.phe");
+
 			try (InputStream inputStream= part_00.getInputStream()) { // save uploaded file
 				Files.copy(inputStream, file_0.toPath());
 			}
 			try (InputStream inputStream= part_01.getInputStream()) { // save uploaded file
 				Files.copy(inputStream, file_1.toPath());
 			}	
-			try (InputStream inputStream= part_02.getInputStream()) { // save uploaded file
-				Files.copy(inputStream, file_2.toPath());
-			}
-			try (InputStream inputStream= part_03.getInputStream()) { // save uploaded file
-				Files.copy(inputStream, file_3.toPath());
-			}	
+
 			Process plink_data = null;
 			plink_data = Runtime.getRuntime().exec(Setup.PLINKdir+" --bfile " + email_dir + "/input_f --recodeA --noweb --maf 0.3 --out "+email_dir+"/input_x");
 			plink_data.waitFor();

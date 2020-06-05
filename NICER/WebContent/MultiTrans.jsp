@@ -4,7 +4,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>GAMMA</title>
+<title>MultiTrans</title>
 <meta charset="utf-8">
 <meta name="viewport"
 	content="width=device-width, initial-scale=1, shrink-to-fit=no">
@@ -25,12 +25,14 @@
 <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
-	<script>
-		if (<%=session.getAttribute("loginId")%> == null) {
+<%-- 	<script>
+		if (
+	<%=session.getAttribute("loginId")%>
+		== null) {
 			alert("You have to log in to use that.");
 			document.location.href = "loginForm.jsp";
 		}
-	</script>
+	</script> --%>
 
 
 	<nav
@@ -107,8 +109,9 @@
 				<div class="container">
 					<div class="row block-9">
 						<div class="col-md-6 pr-md-5">
-							<form action="MultiTransServlet" method="post"
-								enctype="multipart/form-data">
+							<form action="MultiTransServlet" method="post">
+								<!--enctype="multipart/form-data"> -->
+								
 								<div class="form-group">
 									<input type="email" class="form-control" name="emailAddress"
 										placeholder="The email address to receive the results.">
@@ -136,10 +139,9 @@
 									</table>
 								</div>
 								<div class="form-group">
-									<input type="submit" name="upload" value="Submit"
+									<input type="submit" name="upload" value="submit"
 										class="btn btn-primary py-3 px-5">
 								</div>
-						</div>
 						</form>
 						<div class="col-md-6"
 							style="background-image: url(images/word_cloud.png); width: 560px; height: 448px;">

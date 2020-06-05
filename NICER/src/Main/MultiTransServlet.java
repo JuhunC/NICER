@@ -54,14 +54,17 @@ public class MultiTransServlet extends HttpServlet {
 //		    System.out.println(name + " : " +request.getParameter(name));
 //		}
 //		System.out.println("----------------------------");
-		String input_type_str = request.getParameter("tabss");
+		
+//		String input_type_str = request.getParameter("tabss");
 		String emailAddress = request.getParameter("emailAddress");
 		String thr_num = request.getParameter("set_num"); //set the number of thread
+		
+//		System.out.println("이메일일일" + input_type_str);
 		
 		start_t = System.currentTimeMillis();	// for calculate working time
 
 		MultiTrans multitrans = new MultiTrans(emailAddress,request);
-		multitrans.downloadInputData(request, input_type_str);
+//		multitrans.downloadInputData(request, input_type_str);
 		
 		String someMessage = "Upload Complete!! Please Wait for Email Notification\n";
 		PrintWriter out = response.getWriter();
