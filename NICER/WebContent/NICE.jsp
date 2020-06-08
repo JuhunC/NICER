@@ -28,7 +28,7 @@
 
 </head>
 <body>
-<%-- 	<script>
+	<%-- 	<script>
 		if (<%=session.getAttribute("loginId")%> == null) {
 			alert("You have to log in to use that.");
 			document.location.href = "loginForm.jsp";
@@ -132,7 +132,7 @@
 
 							<div id="tab-1" class="tab-content current">
 								<form action="NICEServlet" method="post">
-<!-- 									enctype="multipart/form-data">
+									<!-- 									enctype="multipart/form-data">
  -->
 									<input type="radio" name="set_num" checked="checked"
 										value="5set" /> 5set <input type="radio" name="set_num"
@@ -144,7 +144,11 @@
 									</div>
 									<input type="text" name="tabss" value="type1"
 										style="display: none">
-									<div class="form-group">
+								<!-- </form>
+								<form action="NICEServlet" method="post"
+										enctype="multipart/form-data"> -->
+								<div class="form-group">
+									
 										<table cellspacing="100%">
 											<tr>
 												<th cellspacing="50%"><input type="text"
@@ -167,17 +171,18 @@
 												<th><input type="file" name="EX_file"></th>
 											</tr>
 										</table>
-									</div>
-									<div class="form-group">
-										<input type="submit" name="upload" value="submit"
-											class="btn btn-primary py-3 px-5">
-									</div>
+										
+								</div>
+								<div class="form-group">
+									<input type="submit" name="upload" value="submit"
+										class="btn btn-primary py-3 px-5">
+								</div>
 								</form>
 
 							</div>
 							<div id="tab-2" class="tab-content">
 								<form action="NICEServlet" method="post">
-<!-- 									enctype="multipart/form-data">
+									<!-- 									enctype="multipart/form-data">
  -->
 									<input type="radio" name="set_num" checked="checked"
 										value="5set" /> 5set <input type="radio" name="set_num"
@@ -189,7 +194,9 @@
 									</div>
 									<input type="text" name="tabss" value="type2"
 										style="display: none">
-
+								</form>
+								<form action="NICEServlet" method="post"
+									enctype="multipart/form-data">
 									<div class="form-group">
 										<table cellspacing="100%">
 											<tr>
@@ -217,7 +224,7 @@
 							</div>
 							<div id="tab-3" class="tab-content">
 								<form action="NICEServlet" method="post">
-<!-- 									enctype="multipart/form-data">
+									<!-- 									enctype="multipart/form-data">
  -->
 									<input type="radio" name="set_num" checked="checked"
 										value="5set" /> 5set <input type="radio" name="set_num"
@@ -257,7 +264,7 @@
 							</div>
 							<div id="tab-4" class="tab-content">
 								<form action="NICEServlet" method="post">
-<!-- 									enctype="multipart/form-data">
+									<!-- 									enctype="multipart/form-data">
  -->
 									<input type="radio" name="set_num" checked="checked"
 										value="5set" /> 5set <input type="radio" name="set_num"

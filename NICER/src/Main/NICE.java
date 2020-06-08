@@ -47,6 +47,7 @@ public class NICE {
 		createThreadDir(thr_num_str);
 		
 		// count lines for each thr
+		System.out.println("path: : : " + x_file.getAbsolutePath());
 		int x_cnt = countXfile(x_file.getAbsolutePath());
 		tl_snp_cnt = x_cnt;
 		int thr_ln_x = x_cnt / thr_num;

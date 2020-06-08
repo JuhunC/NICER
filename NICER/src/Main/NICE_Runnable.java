@@ -24,6 +24,9 @@ public class NICE_Runnable implements Runnable {
 		runStage2(); // MetaSoft
 		runStage3();
 	}
+	
+	
+	
 	private void runStage3() {
 		try {
 			String cp_cmd = "cp "+email_dir+"/Y_rightdim.txt "+email_dir+thr_num+"/Y_rightdim.txt";

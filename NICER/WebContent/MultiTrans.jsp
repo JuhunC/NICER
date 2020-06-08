@@ -25,7 +25,7 @@
 <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
-<%-- 	<script>
+	<%-- 	<script>
 		if (
 	<%=session.getAttribute("loginId")%>
 		== null) {
@@ -109,9 +109,9 @@
 				<div class="container">
 					<div class="row block-9">
 						<div class="col-md-6 pr-md-5">
-							<form action="MultiTransServlet" method="post">
-								<!--enctype="multipart/form-data"> -->
-								
+							<form action="MultiTransServlet" method="post"
+								enctype="multipart/form-data">
+
 								<div class="form-group">
 									<input type="email" class="form-control" name="emailAddress"
 										placeholder="The email address to receive the results.">
@@ -139,21 +139,34 @@
 									</table>
 								</div>
 								<div class="form-group">
+									<table cellspacing="100%">
+										<tr>
+											<th cellspacing="50%"><input type="text"
+												placeholder=" Upload Threshold file" disabled></th>
+											<th><input type="file" name="Thresholdfile"></th>
+										</tr>
+										<tr>
+											<th cellspacing="50%"><input type="text" name="windowSize"
+												placeholder="window size"></th>
+										</tr>
+									</table>
+								</div>
+								<div class="form-group">
 									<input type="submit" name="upload" value="submit"
 										class="btn btn-primary py-3 px-5">
 								</div>
-						</form>
-						<div class="col-md-6"
-							style="background-image: url(images/word_cloud.png); width: 560px; height: 448px;">
+							</form>
+							<div class="col-md-6"
+								style="background-image: url(images/word_cloud.png); width: 560px; height: 448px;">
+							</div>
 						</div>
 					</div>
 				</div>
-			</div>
-			<div class="row">
-				<div class="col-md-12 text-center">
-					<p></p>
+				<div class="row">
+					<div class="col-md-12 text-center">
+						<p></p>
+					</div>
 				</div>
-			</div>
 		</footer>
 	</div>
 

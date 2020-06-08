@@ -8,10 +8,14 @@ public class MultiTrans_Runnable implements Runnable {
 	private int snp_cnt;
 	private int pheno_cnt;
 	private int ind_cnt;
-	MultiTrans_Runnable(int thr_num_, String email_dir_,int tl_thr_num){
+	private int snp_num;
+	private int window_size;
+	MultiTrans_Runnable(int thr_num_, String email_dir_, int snp_num, int window_size){
 		this.tl_thr_num = tl_thr_num;
 		thr_num = thr_num_;
+		this.snp_num = snp_num;
 		email_dir = email_dir_;
+		this.window_size = window_size;
 	}
 	public void run() {
 		MultiTrans.transposeFile(email_dir+thr_num+"/X.txt", email_dir+thr_num+"/X_rightdim.txt");
@@ -24,65 +28,53 @@ public class MultiTrans_Runnable implements Runnable {
 		runStage2(); // MetaSoft
 		runStage3();
 	}
+	//Generate correlation matrix r in the rotate space
 	private void runStage3() {
 		try {
-			String cp_cmd = "cp "+email_dir+"/Y_rightdim.txt "+email_dir+thr_num+"/Y_rightdim.txt";
-			Process cp_proc = Runtime.getRuntime().exec(cp_cmd);
-			String cmd = "R CMD BATCH --args "
-					+"-snp="+ email_dir+thr_num +"/X_rightdim.txt "
-					+"-pheno="+email_dir+thr_num+"/Y_rightdim.txt -MvalueThreshold=0.5 "
-					+"-Mvalue="+email_dir+thr_num+"/posterior.txt -minGeneNumber=10 "
-					+"-Pdefault="+ email_dir+thr_num +"/p_ttest.txt "
-					+"-out="+email_dir+thr_num+"/ "
-					//+"-st_snp_num="+ num4 +
-					+" -NICE="+Setup.NICEdir+" -- "+Setup.NICEdir+"/NICE.R" + " " + email_dir+thr_num + "/NICE.Rout";
+
+			String cmd = 
+					"R CMD BATCH --args "
+					+ "-Xpath=" + email_dir+ "/X_rightdim.txt "
+					+ "-Kpath=" + email_dir+ "/K.txt "
+					+ "-VCpath=" + email_dir + "/VC.txt "
+					+ "-outputPath=" + email_dir + " -- " + "./generateR.R" 
+					+ email_dir + "/generateR.log";		
 			Process proc = Runtime.getRuntime().exec(cmd);		 
-//			File n_check = new File(f_path + "/NICE.txt");
 
 			proc.waitFor();	
-			System.out.println("Thread "+thr_num+" has finished Stage 3");
+			System.out.println("Finished Stage 3");
 		}catch(Exception e) {
-			MultiTrans.printERROR("Error for Thread "+thr_num+"\t While running Stage3!!!");
+			MultiTrans.printERROR("Error while running Stage3!!!");
 			e.printStackTrace();
 		}
-
 	}
 	private void runStage2() {
 		try {
-			if(snp_cnt*tl_thr_num > 1000) {
-			Process ps = Runtime.getRuntime().exec("java -Xmx2048m -jar "+Setup.NICEdir+"/Metasoft.jar -input "+ email_dir+thr_num + "/inputMS.txt -mvalue -mvalue_method mcmc -mcmc_sample 1000000 -seed 0 -mvalue_p_thres 1.0 -mvalue_prior_sigma 0.05 -mvalue_prior_beta 1 5 -pvalue_table "+Setup.NICEdir+"/HanEskinPvalueTable.txt -output "+ email_dir +thr_num +"/posterior.txt");
+			Process ps = Runtime.getRuntime().exec(
+					"\r\n" + 
+					"python ./Pylmm_MultiTrans/pylmmGWAS_multiPhHeri.py -v "
+					+ " --emmaSNP=" + email_dir + "X.txt" 
+					+ "--kfile=" + email_dir +"K.txt"
+					+ " --emmaPHENO=" + email_dir +"Y.txt " + email_dir + "VC.txt");
 			ps.waitFor();
-//			String args[] = {" -input ",email_dir+thr_num + "/inputMS.txt",
-//			"-mvalue", "-mvalue_method","mcmc",
-//			"-mcmc_sample","1000000","-seed","0","-mvalue_p_thres","1.0","-mvalue_prior_sigma","0.05",
-//			"-mvalue_prior_beta","1","5",
-//			"-pvalue_table",Setup.NICEdir+"/HanEskinPvalueTable.txt",
-//			"-output",email_dir+thr_num +"/posterior.txt"};
-			}else {
-				Metasoft ms = new Metasoft(email_dir+thr_num+"/inputMS.txt",
-						Setup.NICEdir+"/HanEskinPvalueTable.txt",
-						email_dir+thr_num+"/posterior.txt",
-						email_dir+thr_num+"log.txt");
-			}
-			System.out.println("Thread "+thr_num+" has finished Stage 2");
+
+			System.out.println("Finished Stage 2");
 		}catch(Exception e) {
-			MultiTrans.printERROR("Error for Thread "+thr_num+"\t While running Stage2!!!");
+			MultiTrans.printERROR("Error while running Stage2!!!");
 			e.printStackTrace();
 		}
 	}
 	private void runStage1() {
 		try {
 			Process proc = Runtime.getRuntime().exec(
-					"R CMD BATCH --args" 
-					+" -snp=" + email_dir+thr_num + "/X_rightdim.txt" 
-					+" -pheno="+email_dir +"/Y_rightdim.txt"
-					+" -out=" + email_dir+thr_num+"/" 
-					+" -- "+Setup.NICEdir+"/inputMS.R "
-					+ email_dir+thr_num + "/inputMS.Rout");
+					"python ./Pylmm_MultiTrans/pylmmKinship.py -v" 
+					+ " --emmaSNP=" + email_dir +"X.txt"
+					+ " --emmaNumSNPs=" + window_size + " " 
+					+ email_dir +"K.txt");
 			proc.waitFor();
-			System.out.println("Thread "+thr_num+" has finished Stage 1");
+			System.out.println("Finished Stage 1");
 		}catch(Exception e) {
-			MultiTrans.printERROR("Error for Thread "+thr_num+"\t While running Stage1!!!");
+			MultiTrans.printERROR("Error while running Stage1!!!");
 			e.printStackTrace();
 		}
 	}
