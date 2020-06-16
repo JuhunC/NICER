@@ -18,7 +18,7 @@ public class MultiTrans {
 	public String email_dir;
 	private int snp_num;
 	private int window_size;
-	private Thread[] thr;
+	private Thread thr;
 	private int tl_snp_cnt = 0;
 	private final int FORCE_THREAD = 0; // Force Thread Number(not to force <= 0)
 
@@ -49,10 +49,10 @@ public class MultiTrans {
 //		createThreadDir(thr_num_str);
 
 		// count lines for each thr
-		int x_cnt = countXfile(x_file.getAbsolutePath());
-		tl_snp_cnt = x_cnt;
+//		int x_cnt = countXfile(x_file.getAbsolutePath());
+//		tl_snp_cnt = x_cnt;
 //		int thr_ln_x = x_cnt / thr_num;
-		int thr_ln_x = x_cnt;
+//		int thr_ln_x = x_cnt;
 //		divideXfile(thr_ln_x);
 
 		createNrunThread();
@@ -67,8 +67,7 @@ public class MultiTrans {
 		try {
 			FileWriter fw = new FileWriter(email_dir + "/MultiTrans.txt");
 			BufferedWriter bw = new BufferedWriter(fw);
-			for (int i = 1; i <= thr_num; i++) {
-				FileReader fr = new FileReader(email_dir + i + "/MultiTrans.txt");
+				FileReader fr = new FileReader(email_dir + "/MultiTrans.txt");
 				BufferedReader br = new BufferedReader(fr);
 				String tmp = br.readLine();
 				while (tmp != null) {
@@ -77,7 +76,7 @@ public class MultiTrans {
 				}
 				br.close();
 				fr.close();
-			}
+			
 			bw.close();
 			fw.close();
 		} catch (Exception e) {
@@ -87,24 +86,22 @@ public class MultiTrans {
 	}
 
 	private void waitThread() {
-		for (int i = 0; i < thr_num; i++) {
 			try {
-				thr[i].join();
+				thr.join();
 			} catch (InterruptedException e) {
-				printERROR("Error while joining thread" + i + "!!");
+				printERROR("Error while joining thread!!");
 				e.printStackTrace();
 			}
-		}
+		
 	}
 
 	private void createNrunThread() {
-		thr = new Thread[thr_num];
-		for (int i = 0; i < thr_num; i++) {
-			thr[i] = new Thread(new MultiTrans_Runnable(i + 1, email_dir, thr_num));
-			thr[i].start();
-		}
+			thr = new Thread(new MultiTrans_Runnable(email_dir, snp_num, window_size));
+			thr.start();
+		
 	}
 
+	/*
 	private void divideXfile(int ln_cnt) {
 		try {
 			int ttl_ln = countXfile(x_file.getAbsolutePath());
@@ -120,8 +117,7 @@ public class MultiTrans {
 					System.out.println(i);
 					bw.close();
 					thr_cnt++;
-					if (thr_cnt > thr_num)
-						break;
+					
 					bw = new BufferedWriter(new FileWriter(email_dir + "/" + thr_cnt + "/X.txt"));
 				}
 				bw.write(tmp + "\n");
@@ -155,7 +151,7 @@ public class MultiTrans {
 			printERROR("Error while dividing X file!!");
 			e.printStackTrace();
 		}
-	}
+	}*/
 
 	/**
 	 * Count Number of Lines in X.txt

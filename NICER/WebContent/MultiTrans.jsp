@@ -109,7 +109,7 @@
 				<div class="container">
 					<div class="row block-9">
 						<div class="col-md-6 pr-md-5">
-							<form action="MultiTransServlet" method="post"
+							<form action="MultiTransServlet" method="post">
 								enctype="multipart/form-data">
 
 								<div class="form-group">

@@ -10,20 +10,19 @@ public class MultiTrans_Runnable implements Runnable {
 	private int ind_cnt;
 	private int snp_num;
 	private int window_size;
-	MultiTrans_Runnable(int thr_num_, String email_dir_, int snp_num, int window_size){
+	MultiTrans_Runnable(String email_dir_, int snp_num, int window_size){
 		this.tl_thr_num = tl_thr_num;
-		thr_num = thr_num_;
 		this.snp_num = snp_num;
 		email_dir = email_dir_;
 		this.window_size = window_size;
 	}
 	public void run() {
-		MultiTrans.transposeFile(email_dir+thr_num+"/X.txt", email_dir+thr_num+"/X_rightdim.txt");
+//		MultiTrans.transposeFile(email_dir+thr_num+"/X.txt", email_dir+thr_num+"/X_rightdim.txt");
 		snp_cnt = MultiTrans.countXfile(email_dir+thr_num+"/X.txt");
 		pheno_cnt = MultiTrans.countXfile(email_dir+"/Y.txt");
 		ind_cnt = MultiTrans.countXfile(email_dir+"/Y_rightdim.txt");
 		
-		runTTestStatic();
+//		runTTestStatic();
 		runStage1();
 		runStage2(); // MetaSoft
 		runStage3();

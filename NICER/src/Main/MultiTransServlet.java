@@ -99,7 +99,7 @@ public class MultiTransServlet extends HttpServlet {
 				}
 				
 				Message msg = new MimeMessage(s);
-				Address sender_address = new InternetAddress("taegun89@gmail.com");
+				Address sender_address = new InternetAddress("wd32777@gmail.com");
 				Address receiver_address = new InternetAddress(emailaddr);
 		
 				msg.setHeader("content-type", "text/html;charset=euc-kr");
