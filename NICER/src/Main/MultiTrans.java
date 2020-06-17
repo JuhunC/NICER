@@ -18,6 +18,7 @@ public class MultiTrans {
 	public String email_dir;
 	private int snp_num;
 	private int window_size;
+	private int s_num;
 	private Thread thr;
 	private int tl_snp_cnt = 0;
 	private final int FORCE_THREAD = 0; // Force Thread Number(not to force <= 0)
@@ -96,7 +97,7 @@ public class MultiTrans {
 	}
 
 	private void createNrunThread() {
-			thr = new Thread(new MultiTrans_Runnable(email_dir, snp_num, window_size));
+			thr = new Thread(new MultiTrans_Runnable(email_dir, snp_num, window_size, s_num));
 			thr.start();
 		
 	}
