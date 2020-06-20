@@ -25,18 +25,18 @@ public class MultiTrans_Runnable implements Runnable {
 		
 		try {
 			//slide_1prep
-			String cmd = Setup.MULTITRANSdir+ "/slide.1.0/slide_1prep -C "
+			String cmd = Setup.mainDir+ "/slide.1.0/slide_1prep -C "
 					+  email_dir+ "c.txt " + window_size + " "
 					+ email_dir+ "prep";
 			// slide_2run
-			String cmd2 =  Setup.MULTITRANSdir + "/slide.1.0/slide_2run "
+			String cmd2 =  Setup.mainDir + "/slide.1.0/slide_2run "
 					+ email_dir+ "prep " + email_dir+ "maxstat " 
 					+ snp_num+ " " + s_num;
 			// slide_3sort
-			String cmd3 =  Setup.MULTITRANSdir + "/slide.1.0/slide_3sort "
+			String cmd3 =  Setup.mainDir + "/slide.1.0/slide_3sort "
 					+ email_dir+ "sorted " + email_dir+ "maxstat";
 			// slide_4correct
-			String cmd4 =  Setup.MULTITRANSdir + "/slide.1.0/slide_4correct -p "
+			String cmd4 =  Setup.mainDir + "/slide.1.0/slide_4correct -p "
 					+ email_dir+ "sorted " + Setup.MULTITRANSdir + "/threshold.txt "
 					+ email_dir+ "MultiTrans.output";
 			Process proc = Runtime.getRuntime().exec(cmd);		 
