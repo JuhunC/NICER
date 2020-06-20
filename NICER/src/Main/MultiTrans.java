@@ -10,7 +10,7 @@ import javax.servlet.annotation.MultipartConfig;
 import javax.servlet.http.*;
 import javax.servlet.http.Part;
 
-@MultipartConfig(maxFileSize = -1, maxRequestSize = -1, location = Setup.FileSaveDirectory)
+@MultipartConfig(maxFileSize = -1, maxRequestSize = -1, location = Setup.FileSaveDirectory_Multitrans)
 public class MultiTrans {
 	private File x_file; // SNP file
 	private File y_file; // Pheno file
@@ -25,7 +25,7 @@ public class MultiTrans {
 
 	MultiTrans(String emailaddr, HttpServletRequest request) {
 		// create directory
-		email_dir = Setup.FileSaveDirectory + emailaddr + "/";
+		email_dir = Setup.FileSaveDirectory_Multitrans + emailaddr + "/";
 		File userDir = new File(email_dir);
 		if (!userDir.exists() && userDir.mkdir()) { // this part need Optimize
 			Process f_chm = null;
@@ -193,7 +193,7 @@ public class MultiTrans {
 //		if(FORCE_THREAD > 0) {
 //			thr_num = FORCE_THREAD;
 //		}
-//		File[] userDir_ = new File[thr_num];
+//		File[] userDir_ downloadInputData new File[thr_num];
 //		for(int i = 0; i < thr_num; i++) {
 //			userDir_[i] = new File(email_dir+"/" + String.valueOf(i+1));
 //			userDir_[i].mkdirs();

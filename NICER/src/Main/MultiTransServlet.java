@@ -17,7 +17,7 @@ import hihi.GoogleAuthentication;
  */
 
 @WebServlet("/MultiTransServlet")
-@MultipartConfig(maxFileSize = -1, maxRequestSize = -1,location =Setup.FileSaveDirectory)
+@MultipartConfig(maxFileSize = -1, maxRequestSize = -1,location =Setup.FileSaveDirectory_Multitrans)
 public class MultiTransServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
     private long end_t = 0;
