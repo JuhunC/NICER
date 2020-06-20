@@ -11,13 +11,15 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.oreilly.servlet.MultipartRequest;
+
 import hihi.GoogleAuthentication;
 /**
  * Servlet implementation class MultiTransServlet
  */
 
 @WebServlet("/MultiTransServlet")
-@MultipartConfig(maxFileSize = -1, maxRequestSize = -1,location =Setup.FileSaveDirectory_Multitrans)
+@MultipartConfig
 public class MultiTransServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
     private long end_t = 0;
@@ -56,15 +58,14 @@ public class MultiTransServlet extends HttpServlet {
 //		System.out.println("----------------------------");
 		
 //		String input_type_str = request.getParameter("tabss");
+		
+
 		String emailAddress = request.getParameter("emailAddress");
-//		String thr_num = request.getParameter("set_num"); //set the number of thread
 		String snp_num = request.getParameter("NumSNPs");
-		String window_size = request.getParameter("window_size");
+		String window_size = request.getParameter("windowSize");
 		String s_num = request.getParameter("s_num");
 
-		
-//		System.out.println("이메일일일" + input_type_str);
-		
+				
 		start_t = System.currentTimeMillis();	// for calculate working time
 
 		MultiTrans multitrans = new MultiTrans(emailAddress,request);
@@ -78,7 +79,8 @@ public class MultiTransServlet extends HttpServlet {
 		//Feed Client the main page 
 		RequestDispatcher view = request.getRequestDispatcher("index.html");
 		view.forward(request, response);
-		
+		System.out.println("email : "+emailAddress + " snp_num : "+ snp_num + "window_size : "+window_size+"s_num " + s_num);
+
 		/** Running MultiTrans **/
 		multitrans.run(snp_num, window_size, s_num);
 		end_t = System.currentTimeMillis();
