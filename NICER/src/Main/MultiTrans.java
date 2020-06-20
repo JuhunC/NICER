@@ -47,19 +47,10 @@ public class MultiTrans {
 	}
 
 	public void run() {
-//		createThreadDir(thr_num_str);
-
-		// count lines for each thr
-//		int x_cnt = countXfile(x_file.getAbsolutePath());
-//		tl_snp_cnt = x_cnt;
-//		int thr_ln_x = x_cnt / thr_num;
-//		int thr_ln_x = x_cnt;
-//		divideXfile(thr_ln_x);
-
 		createNrunThread();
 		waitThread();
 
-//		combineResults();
+		combineResults();
 
 		return; // end of running MultiTrans
 	}
@@ -309,47 +300,6 @@ public class MultiTrans {
 			printERROR("Error Occurred while uploading XY data!!");
 			e.printStackTrace();
 		}
-	}
-
-	private void generateKinship(HttpServletRequest request) {
-		try {
-			Part part_00 = request.getPart("SNPfile");
-			Part part_01 = request.getPart("Phenotypefile");
-			
-			File file_0 = new File(email_dir+"/input_f.snp");
-			File file_1 = new File(email_dir+"/input_f.phe");
-
-			try (InputStream inputStream= part_00.getInputStream()) { // save uploaded file
-				Files.copy(inputStream, file_0.toPath());
-			}
-			try (InputStream inputStream= part_01.getInputStream()) { // save uploaded file
-				Files.copy(inputStream, file_1.toPath());
-			}	
-
-			Process plink_data = null;
-			plink_data = Runtime.getRuntime().exec(Setup.PLINKdir+" --bfile " + email_dir + "/input_f --recodeA --noweb --maf 0.3 --out "+email_dir+"/input_x");
-			plink_data.waitFor();
-			
-			Process pl_to_input = null; //x data
-			pl_to_input = Runtime.getRuntime().exec(Setup.NICEdir+"/pl_to_input " + email_dir);
-			pl_to_input.waitFor();
-			
-//			python ./Pylmm_MultiTrans/pylmmKinship.py -v --emmaSNP=./testData/X.txt --emmaNumSNPs=100 ./testData/K.txt
-
-			
-			Process pl_to_input_y = null; // y data
-			pl_to_input_y = Runtime.getRuntime().exec(Setup.NICEdir+"pl_to_input_y " + email_dir);
-			pl_to_input_y.waitFor();
-			
-			// X_rightdim -> X.txt Y_rightdim -> Y.txt
-			transposeFile(email_dir+"/X_rightdim.txt",email_dir+"/X.txt");
-			transposeFile(email_dir+"/Y_rightdim.txt",email_dir+"/Y.txt");			
-		}
-		catch(Exception e) {
-			printERROR("Error Occurred while uploading// converting PLINK data!!");
-			e.printStackTrace();
-		}
-			
 	}
 
 	private void downloadPlink(HttpServletRequest request) {
