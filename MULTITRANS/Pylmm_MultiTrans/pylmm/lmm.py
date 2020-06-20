@@ -213,10 +213,10 @@ class LMM:
       When this parameter is not provided, the constructor will set X0 to an n x 1 matrix of all ones to represent a mean effect.
       """
 
-      if X0 == None: X0 = np.ones(len(Y)).reshape(len(Y),1)
+      if X0.all() == None: X0 = np.ones(len(Y)).reshape(len(Y),1)
       self.verbose = verbose
 
-      x = True - np.isnan(Y)
+      x = np.bitwise_xor(True, np.isnan(Y), dtype=bool)
       x = x.reshape(-1,)
       if not x.sum() == len(Y):
 	 if self.verbose: sys.stderr.write("Removing %d missing values from Y\n" % ((True - x).sum()))
@@ -295,7 +295,7 @@ class LMM:
 	 REML is computed by adding additional terms to the standard LL and can be computed by setting REML=True.
       """
 
-      if X == None: X = self.X0t
+      if X.all() == None: X = self.X0t
       elif stack: 
 	 self.X0t_stack[:,(self.q)] = matrixMult(self.Kve.T,X)[:,0]
 	 X = self.X0t_stack
@@ -439,4 +439,3 @@ class LMM:
       vx = ((self.H - mn)**2 * p).sum()
 
       return mn,vx
-
