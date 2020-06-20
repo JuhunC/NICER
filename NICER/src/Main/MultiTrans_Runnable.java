@@ -2,28 +2,17 @@ package Main;
 
 import METASOFT.*;
 public class MultiTrans_Runnable implements Runnable {
-	private int thr_num;
-	private int tl_thr_num;
 	private String email_dir;
-	private int snp_cnt;
-	private int pheno_cnt;
-	private int ind_cnt;
 	private String snp_num;
 	private String window_size;
 	private String s_num;
 	MultiTrans_Runnable(String email_dir_, String snp_num, String window_size, String s_num){
-		this.tl_thr_num = tl_thr_num;
 		this.snp_num = snp_num;
 		email_dir = email_dir_;
 		this.window_size = window_size;
 		this.s_num = s_num;
 	}
 	public void run() {
-//		MultiTrans.transposeFile(email_dir+thr_num+"/X.txt", email_dir+thr_num+"/X_rightdim.txt");
-		snp_cnt = MultiTrans.countXfile(email_dir+thr_num+"/X.txt");
-		pheno_cnt = MultiTrans.countXfile(email_dir+"/Y.txt");
-		ind_cnt = MultiTrans.countXfile(email_dir+"/Y_rightdim.txt");
-		
 		runStage1();
 		runStage2();
 		runStage3();
@@ -36,20 +25,20 @@ public class MultiTrans_Runnable implements Runnable {
 		
 		try {
 			//slide_1prep
-			String cmd = Setup.mainDir + "/slide.1.0/slide_1prep -C "
-					+  email_dir+ "/c.txt " + window_size + " "
-					+ email_dir+ "/prep";
+			String cmd = Setup.MULTITRANSdir+ "/slide.1.0/slide_1prep -C "
+					+  email_dir+ "c.txt " + window_size + " "
+					+ email_dir+ "prep";
 			// slide_2run
-			String cmd2 =  Setup.mainDir + "/slide.1.0/slide_2run "
-					+ email_dir+ "/prep " + email_dir+ "/maxstat " 
+			String cmd2 =  Setup.MULTITRANSdir + "/slide.1.0/slide_2run "
+					+ email_dir+ "prep " + email_dir+ "maxstat " 
 					+ snp_num+ " " + s_num;
 			// slide_3sort
-			String cmd3 =  Setup.mainDir + "/slide.1.0/slide_3sort "
-					+ email_dir+ "/sorted " + email_dir+ "/maxstat";
+			String cmd3 =  Setup.MULTITRANSdir + "/slide.1.0/slide_3sort "
+					+ email_dir+ "sorted " + email_dir+ "maxstat";
 			// slide_4correct
-			String cmd4 =  Setup.mainDir + "/slide.1.0/slide_4correct -p "
-					+ email_dir+ "/sorted threshold.txt "
-					+ email_dir+ "/MultiTrans.output";
+			String cmd4 =  Setup.MULTITRANSdir + "/slide.1.0/slide_4correct -p "
+					+ email_dir+ "sorted " + Setup.MULTITRANSdir + "/threshold.txt "
+					+ email_dir+ "MultiTrans.output";
 			Process proc = Runtime.getRuntime().exec(cmd);		 
 			proc.waitFor();
 			Process proc2 = Runtime.getRuntime().exec(cmd2);		 
@@ -71,9 +60,9 @@ public class MultiTrans_Runnable implements Runnable {
 		try {
 
 			String cmd = 
-					"java -jar ./generateC/jgenerateC.jar"
+					"java -jar " +  Setup.MULTITRANSdir+ "/generateC/jgenerateC.jar"
 					+ window_size + " " + email_dir+ "/r.txt "
-					+ email_dir+ "/c.txt ";
+					+ email_dir + "/c.txt ";
 			Process proc = Runtime.getRuntime().exec(cmd);		 
 
 			proc.waitFor();	
@@ -87,14 +76,14 @@ public class MultiTrans_Runnable implements Runnable {
 	//Generate correlation matrix r in the rotate space
 	private void runStage3() {
 		try {
-
 			String cmd = 
 					"R CMD BATCH --args "
-					+ "-Xpath=" + email_dir+ "/X_rightdim.txt "
-					+ "-Kpath=" + email_dir+ "/K.txt "
-					+ "-VCpath=" + email_dir + "/VC.txt "
-					+ "-outputPath=" + email_dir + " -- " + "./generateR.R" 
-					+ email_dir + "/generateR.log";		
+					+ "-Xpath=" + email_dir+ "X_rightdim.txt "
+					+ "-Kpath=" + email_dir+ "K.txt "
+					+ "-VCpath=" + email_dir + "VC.txt "
+					+ "-outputPath=" + email_dir + " -- " 
+					+ Setup.MULTITRANSdir+ "/generateR.R" 
+					+ email_dir + "generateR.log";		
 			Process proc = Runtime.getRuntime().exec(cmd);		 
 
 			proc.waitFor();	
@@ -110,10 +99,11 @@ public class MultiTrans_Runnable implements Runnable {
 		try {
 			Process ps = Runtime.getRuntime().exec(
 					"\r\n" + 
-					"python ./Pylmm_MultiTrans/pylmmGWAS_multiPhHeri.py -v "
+					"python " + Setup.MULTITRANSdir+ "/Pylmm_MultiTrans/pylmmGWAS_multiPhHeri.py -v "
 					+ " --emmaSNP=" + email_dir + "X.txt" 
 					+ "--kfile=" + email_dir +"K.txt"
-					+ " --emmaPHENO=" + email_dir +"Y.txt " + email_dir + "VC.txt");
+					+ " --emmaPHENO=" + email_dir +"Y.txt " 
+					+ email_dir + "VC.txt");
 			ps.waitFor();
 
 			System.out.println("Finished Stage 2");
@@ -127,7 +117,7 @@ public class MultiTrans_Runnable implements Runnable {
 	private void runStage1() {
 		try {
 			Process proc = Runtime.getRuntime().exec(
-					"python ./Pylmm_MultiTrans/pylmmKinship.py -v" 
+					"python " + Setup.MULTITRANSdir+ "/Pylmm_MultiTrans/pylmmKinship.py -v" 
 					+ " --emmaSNP=" + email_dir +"X.txt"
 					+ " --emmaNumSNPs=" + snp_num + " " 
 					+ email_dir +"K.txt");

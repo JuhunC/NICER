@@ -69,7 +69,7 @@ public class MultiTransServlet extends HttpServlet {
 		start_t = System.currentTimeMillis();	// for calculate working time
 
 		MultiTrans multitrans = new MultiTrans(emailAddress,request);
-//		multitrans.downloadInputData(request, input_type_str);
+		multitrans.downloadInputData(request);
 		
 		String someMessage = "Upload Complete!! Please Wait for Email Notification\n";
 		PrintWriter out = response.getWriter();

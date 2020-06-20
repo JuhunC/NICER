@@ -1,0 +1,99 @@
+
+R version 2.15.1 (2012-06-22) -- "Roasted Marshmallows"
+Copyright (C) 2012 The R Foundation for Statistical Computing
+ISBN 3-900051-07-0
+Platform: x86_64-unknown-linux-gnu (64-bit)
+
+R is free software and comes with ABSOLUTELY NO WARRANTY.
+You are welcome to redistribute it under certain conditions.
+Type 'license()' or 'licence()' for distribution details.
+
+  Natural language support but running in an English locale
+
+R is a collaborative project with many contributors.
+Type 'contributors()' for more information and
+'citation()' on how to cite R or R packages in publications.
+
+Type 'demo()' for some demos, 'help()' for on-line help, or
+'help.start()' for an HTML browser interface to help.
+Type 'q()' to quit R.
+
+[Previously saved workspace restored]
+
+> rm(list=ls())
+> library(gtools);
+> library(mvtnorm);
+> ############### define functions ###############
+> getZscore = function(snp_one,pheno_one) {                               #for (one snp* every indi) and (one pheno * every indi)
++         coeff = summary(lm(pheno_one~snp_one))$coeff
++         if (dim(coeff)[1] == 1) return(NA)
++         else if(is.na(coeff[2,4])) return(NA)   ### this has been changed
++         else {
++                 zscore = abs(qnorm(coeff[2,4]/2))
++                 if (coeff[2,3] >= 0) return(zscore)
++                 else return(-1*zscore)
++         }
++ }
+> chol_solve <- function(K) {
++     a = eigen(K)$vectors
++     b = eigen(K)$values
++     b[b<1e-13] = 1e-13
++     b = 1/sqrt(b)
++     return(a%*%diag(b)%*%t(a))
++ }
+> rotate <- function(Y, sigma) {
++     U <- chol_solve(sigma)
++     tU <-t(U)
++     UY = tU%*%Y
++     return(UY)
++ }
+> 
+> ################## get input ###################
+> source("/u/home/j/jwjjoo/project/causal/GTEx_Blood/scripts/causality/likeFunc.r")
+> args=(commandArgs(TRUE))
+> if(length(args)!=4){
++         print("Usage: R CMD BATCH --args -Xpath= -Kpath= -VGpath= -outputPath= generateR.R generateR.log")
++         stop ()
++ }
+> for (i in 1:4){
++         paramName =  strsplit(args[i],"=")[[1]][1]
++         param =strsplit(args[i],"=")[[1]][2]
++         if(paramName=="-Xpath")
++                 Xpath = param
++         else if(paramName=="-outputPath")
++                 outputPath = param
++         else if(paramName=="-Kpath")
++         	Kpath = param
++ 	else if(paramName=="-VCpath")
++                 VCpath = param
++ 	else {
++                 cat("Error: Wrong parameter name ",paramName)
++                 stop()
++         }
++ }
+> print(Xpath)
+[1] "./testData/X_rightdim.txt"
+> print(Kpath)
+[1] "./testData/K.txt"
+> print(VCpath)
+[1] "./testData/VC.txt"
+> print(outputPath)
+[1] "./testData/"
+> ################## estimate R ##################
+> X = as.matrix(read.table(Xpath))
+> K = as.matrix(read.table(Kpath))
+> VC = as.matrix(read.table(VCpath))
+> snpNum <- dim(X)[2]
+> indiNum <- dim(X)[1]
+> Vg = median(VC[,1])
+> Ve = median(VC[,2])
+> I<-matrix(0,nrow=indiNum, ncol=indiNum); 
+> I[row(I)==col(I)]<-1;
+> sigmaM = Vg*K + Ve*I;
+> UX = rotate(X,sigmaM)
+> Ur=cor(UX,UX)
+> write.table(Ur,paste(outputPath,"/r.txt",sep=""),row.names=FALSE, col.names=FALSE, quote=FALSE)
+> 
+> proc.time()
+   user  system elapsed 
+  0.292   0.067   0.370 

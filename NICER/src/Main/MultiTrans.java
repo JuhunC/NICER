@@ -166,41 +166,37 @@ public class MultiTrans {
 	 * 
 	 * @param thr_num_str
 	 */
-//	private void createThreadDir(String thr_num_str) {
-//		if(thr_num_str.equals("5set")) {
-//			thr_num = 5;
-//		}else{ //default
-//			thr_num = 10;
-//		}
-//		if(FORCE_THREAD > 0) {
-//			thr_num = FORCE_THREAD;
-//		}
-//		File[] userDir_ downloadInputData new File[thr_num];
-//		for(int i = 0; i < thr_num; i++) {
-//			userDir_[i] = new File(email_dir+"/" + String.valueOf(i+1));
-//			userDir_[i].mkdirs();
-//			Process f_chm = null;
-//			try {
-//				if(f_chm == null) {
-//					f_chm = Runtime.getRuntime().exec("chmod 777 "+ userDir_[i]);
-//					f_chm.waitFor();
-//				}						
-//			}
-//			catch(Exception e) {
-//				e.printStackTrace();
-//			}     
-//		
-//		}
-//	}
-	public void downloadInputData(HttpServletRequest request, String input_type_str) {
-		if (input_type_str.equals("type1")) {
-			downloadPlink(request);
-		} else if (input_type_str.equals("type2")) {
-			downloadXY(request);
-		} else if (input_type_str.equals("type3")) {
-			downloadTransposedXY(request);
-		} else if (input_type_str.equals("type4")) {
-			downloadVCF(request);
+
+	public void downloadInputData(HttpServletRequest request) {
+		try {
+			Part part = request.getPart("SNPfile");
+			File x = new File(email_dir + "/X.txt");
+			try (InputStream inputStream = part.getInputStream()){ // save uploaded file
+				Files.copy(inputStream, x.toPath());
+			}
+			Part part1 = request.getPart("Phenotypefile");
+			File y = new File(email_dir + "/Y.txt");
+			try (InputStream inputStream = part1.getInputStream()) { // save uploaded file
+				Files.copy(inputStream, y.toPath());
+			}
+			Part part2 = request.getPart("Thresholdfile");
+			File x_rightdim = new File(email_dir + "/X_rightdim.txt");
+			try (InputStream inputStream = part2.getInputStream()) { // save uploaded file
+				Files.copy(inputStream, x_rightdim.toPath());
+			}
+			Part part3 = request.getPart("Thresholdfile");
+			File r_file = new File(email_dir + "/r.txt");
+			try (InputStream inputStream = part3.getInputStream()) { // save uploaded file
+				Files.copy(inputStream, r_file.toPath());
+			}
+			Part part4 = request.getPart("Sortedfile");
+			File sorted_file = new File(email_dir + "/sorted");
+			try (InputStream inputStream = part4.getInputStream()) { // save uploaded file
+				Files.copy(inputStream, sorted_file.toPath());
+			}
+		} catch (Exception e) {
+			printERROR("Error Occured while uploading transposed XY data!!");
+			e.printStackTrace();
 		}
 	}
 

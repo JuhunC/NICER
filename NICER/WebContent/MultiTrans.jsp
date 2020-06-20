@@ -111,12 +111,12 @@
 						<div class="col-md-6 pr-md-5">
 							<form action="MultiTransServlet" method="post"
 								enctype="multipart/form-data">
-							
+
 								<div class="form-group">
 									<input type="email" class="form-control" name="emailAddress"
 										placeholder="The email address to receive the results.">
 								</div>
-						
+
 								<div class="form-group">
 									<table cellspacing="100%">
 										<tr>
@@ -137,7 +137,7 @@
 										</tr>
 									</table>
 								</div>
-							
+
 								<div class="form-group">
 									<table cellspacing="100%">
 										<tr>
@@ -147,7 +147,24 @@
 										</tr>
 									</table>
 								</div>
-							
+								<div class="form-group">
+									<table cellspacing="100%">
+										<tr>
+											<th cellspacing="50%"><input type="text"
+												placeholder=" Upload R.txt file" disabled></th>
+											<th><input type="file" name="Rfile"></th>
+										</tr>
+									</table>
+								</div>
+								<div class="form-group">
+									<table cellspacing="100%">
+										<tr>
+											<th cellspacing="50%"><input type="text"
+												placeholder=" Upload sorted file" disabled></th>
+											<th><input type="file" name="Sortedfile"></th>
+										</tr>
+									</table>
+								</div>
 								<div>
 									<table>
 										<tr>
