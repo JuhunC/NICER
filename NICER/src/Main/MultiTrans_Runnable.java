@@ -8,10 +8,10 @@ public class MultiTrans_Runnable implements Runnable {
 	private int snp_cnt;
 	private int pheno_cnt;
 	private int ind_cnt;
-	private int snp_num;
-	private int window_size;
-	private int s_num;
-	MultiTrans_Runnable(String email_dir_, int snp_num, int window_size, int s_num){
+	private String snp_num;
+	private String window_size;
+	private String s_num;
+	MultiTrans_Runnable(String email_dir_, String snp_num, String window_size, String s_num){
 		this.tl_thr_num = tl_thr_num;
 		this.snp_num = snp_num;
 		email_dir = email_dir_;

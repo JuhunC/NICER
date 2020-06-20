@@ -59,6 +59,9 @@ public class MultiTransServlet extends HttpServlet {
 		String emailAddress = request.getParameter("emailAddress");
 //		String thr_num = request.getParameter("set_num"); //set the number of thread
 		String snp_num = request.getParameter("NumSNPs");
+		String window_size = request.getParameter("window_size");
+		String s_num = request.getParameter("s_num");
+
 		
 //		System.out.println("이메일일일" + input_type_str);
 		
@@ -77,9 +80,9 @@ public class MultiTransServlet extends HttpServlet {
 		view.forward(request, response);
 		
 		/** Running MultiTrans **/
-		multitrans.run();
+		multitrans.run(snp_num, window_size, s_num);
 		end_t = System.currentTimeMillis();
-		sendResultMail(multitrans.email_dir,"MultiTrans.txt", emailAddress, end_t-start_t);
+		sendResultMail(multitrans.email_dir,"MultiTrans.output", emailAddress, end_t-start_t);
 	}
 	public static void sendResultMail(String file_dir,String file_name, String emailaddr, long end_start) {
 		//send e_mail

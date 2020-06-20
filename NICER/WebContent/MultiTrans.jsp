@@ -109,13 +109,14 @@
 				<div class="container">
 					<div class="row block-9">
 						<div class="col-md-6 pr-md-5">
-							<form action="MultiTransServlet" method="post"
- 								enctype="multipart/form-data">
- 
+							<form action="MultiTransServlet" method="post">
 								<div class="form-group">
 									<input type="email" class="form-control" name="emailAddress"
 										placeholder="The email address to receive the results.">
 								</div>
+							</form>
+							<form action="MultiTransServlet" method="post"
+								enctype="multipart/form-data">
 								<div class="form-group">
 									<table cellspacing="100%">
 										<tr>
@@ -129,6 +130,7 @@
 										</tr>
 									</table>
 								</div>
+
 								<div class="form-group">
 									<table cellspacing="100%">
 										<tr>
@@ -138,6 +140,9 @@
 										</tr>
 									</table>
 								</div>
+							</form>
+							<form action="MultiTransServlet" method="post"
+								enctype="multipart/form-data">
 								<div class="form-group">
 									<table cellspacing="100%">
 										<tr>
@@ -145,17 +150,24 @@
 												placeholder=" Upload Threshold file" disabled></th>
 											<th><input type="file" name="Thresholdfile"></th>
 										</tr>
+									</table>
+								</div>
+							</form>
+							<form action="MultiTransServlet" method="post">
+								<div>
+									<table>
 										<tr>
-											<th cellspacing="50%"><input type="text" name="windowSize"
-												placeholder="window size"></th>
+											<th cellspacing="50%"><input type="text"
+												name="windowSize" placeholder="window size"></th>
 										</tr>
 										<tr>
 											<th cellspacing="50%"><input type="text" name="s_num"
 												placeholder="s_num"></th>
 										</tr>
-										
+
 									</table>
 								</div>
+
 								<div class="form-group">
 									<input type="submit" name="upload" value="submit"
 										class="btn btn-primary py-3 px-5">

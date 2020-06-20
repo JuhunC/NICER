@@ -46,8 +46,9 @@ public class MultiTrans {
 		userDir.mkdir();
 	}
 
-	public void run() {
-		createNrunThread();
+	public void run(String snp_num, String window_size, String s_num) {
+		createThreadDir();
+		createNrunThread(snp_num, window_size, s_num);
 		waitThread();
 
 		combineResults();
@@ -55,20 +56,37 @@ public class MultiTrans {
 		return; // end of running MultiTrans
 	}
 
+	private void createThreadDir() {
+
+		File userDir = new File(email_dir);
+		userDir.mkdirs();
+		Process f_chm = null;
+		try {
+			if (f_chm == null) {
+				f_chm = Runtime.getRuntime().exec("chmod 777 " + userDir);
+				f_chm.waitFor();
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+	}
+
 	private void combineResults() {
 		try {
-			FileWriter fw = new FileWriter(email_dir + "/MultiTrans.txt");
+			FileWriter fw = new FileWriter(email_dir + "/MultiTrans.output");
 			BufferedWriter bw = new BufferedWriter(fw);
-				FileReader fr = new FileReader(email_dir + "/MultiTrans.txt");
-				BufferedReader br = new BufferedReader(fr);
-				String tmp = br.readLine();
-				while (tmp != null) {
-					bw.write(tmp + "\n");
-					tmp = br.readLine();
-				}
-				br.close();
-				fr.close();
+			FileReader fr = new FileReader(email_dir + "/MultiTrans.output");
 			
+			BufferedReader br = new BufferedReader(fr);
+			String tmp = br.readLine();
+			while (tmp != null) {
+				bw.write(tmp + "\n");
+				tmp = br.readLine();
+			}
+			br.close();
+			fr.close();
+
 			bw.close();
 			fw.close();
 		} catch (Exception e) {
@@ -78,72 +96,45 @@ public class MultiTrans {
 	}
 
 	private void waitThread() {
-			try {
-				thr.join();
-			} catch (InterruptedException e) {
-				printERROR("Error while joining thread!!");
-				e.printStackTrace();
-			}
-		
+		try {
+			thr.join();
+		} catch (InterruptedException e) {
+			printERROR("Error while joining thread!!");
+			e.printStackTrace();
+		}
+
 	}
 
-	private void createNrunThread() {
-			thr = new Thread(new MultiTrans_Runnable(email_dir, snp_num, window_size, s_num));
-			thr.start();
-		
+	private void createNrunThread(String snp_num, String window_size, String s_num) {
+		thr = new Thread(new MultiTrans_Runnable(email_dir, snp_num, window_size, s_num));
+		thr.start();
+
 	}
 
 	/*
-	private void divideXfile(int ln_cnt) {
-		try {
-			int ttl_ln = countXfile(x_file.getAbsolutePath());
-			FileReader fr = new FileReader(x_file.getAbsoluteFile());
-			BufferedReader br = new BufferedReader(fr);
-			String tmp;
-			int thr_cnt = 1;
-
-			BufferedWriter bw = new BufferedWriter(new FileWriter(email_dir + "/" + thr_cnt + "/X.txt"));
-			for (int i = 0; i < ttl_ln; i++) {
-				tmp = br.readLine();
-				if (i != 0 && i % ln_cnt == 0) {
-					System.out.println(i);
-					bw.close();
-					thr_cnt++;
-					
-					bw = new BufferedWriter(new FileWriter(email_dir + "/" + thr_cnt + "/X.txt"));
-				}
-				bw.write(tmp + "\n");
-			}
-			bw.close();
-//			int thr_cnt = 1;
-//			FileReader fr = new FileReader(x_file.getAbsoluteFile());
-//			BufferedReader br = new BufferedReader(fr);
-//			String ln = br.readLine();
-//			
-//			FileWriter fw = new FileWriter(email_dir+"/"+thr_cnt+"/"+"X.txt");
-//			BufferedWriter bw = new BufferedWriter(fw);
-//			
-//			int cnt =0;
-//			while(ln != null) {
-//				cnt++;
-//				ln+="\n";
-//				bw.write(ln.toCharArray());
-//				ln = br.readLine();
-//				
-//				if(cnt == ln_cnt) {
-//					bw.close();fw.close();
-//					thr_cnt++; cnt = 1;
-//					fw = new FileWriter(email_dir+"/"+thr_cnt+"/"+"X.txt");
-//					bw = new BufferedWriter(fw);
-//				}
-//			}
-//			bw.close(); fw.close();
-//			br.close(); fr.close();
-		} catch (Exception e) {
-			printERROR("Error while dividing X file!!");
-			e.printStackTrace();
-		}
-	}*/
+	 * private void divideXfile(int ln_cnt) { try { int ttl_ln =
+	 * countXfile(x_file.getAbsolutePath()); FileReader fr = new
+	 * FileReader(x_file.getAbsoluteFile()); BufferedReader br = new
+	 * BufferedReader(fr); String tmp; int thr_cnt = 1;
+	 * 
+	 * BufferedWriter bw = new BufferedWriter(new FileWriter(email_dir + "/" +
+	 * thr_cnt + "/X.txt")); for (int i = 0; i < ttl_ln; i++) { tmp = br.readLine();
+	 * if (i != 0 && i % ln_cnt == 0) { System.out.println(i); bw.close();
+	 * thr_cnt++;
+	 * 
+	 * bw = new BufferedWriter(new FileWriter(email_dir + "/" + thr_cnt +
+	 * "/X.txt")); } bw.write(tmp + "\n"); } bw.close(); // int thr_cnt = 1; //
+	 * FileReader fr = new FileReader(x_file.getAbsoluteFile()); // BufferedReader
+	 * br = new BufferedReader(fr); // String ln = br.readLine(); // // FileWriter
+	 * fw = new FileWriter(email_dir+"/"+thr_cnt+"/"+"X.txt"); // BufferedWriter bw
+	 * = new BufferedWriter(fw); // // int cnt =0; // while(ln != null) { // cnt++;
+	 * // ln+="\n"; // bw.write(ln.toCharArray()); // ln = br.readLine(); // //
+	 * if(cnt == ln_cnt) { // bw.close();fw.close(); // thr_cnt++; cnt = 1; // fw =
+	 * new FileWriter(email_dir+"/"+thr_cnt+"/"+"X.txt"); // bw = new
+	 * BufferedWriter(fw); // } // } // bw.close(); fw.close(); // br.close();
+	 * fr.close(); } catch (Exception e) {
+	 * printERROR("Error while dividing X file!!"); e.printStackTrace(); } }
+	 */
 
 	/**
 	 * Count Number of Lines in X.txt
