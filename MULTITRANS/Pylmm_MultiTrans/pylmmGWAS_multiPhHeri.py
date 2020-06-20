@@ -187,7 +187,7 @@ for i in range(0,phenoNum):
 	print(i+1)
 	Y = IN.phenos[:,i]
 	v = np.isnan(Y)
-	keep = True - v
+	keep = np.bitwise_xor(True, v, dtype=bool)
 	if v.sum():
 	   if options.verbose: sys.stderr.write("Cleaning the phenotype vector by removing %d individuals...\n" % (v.sum()))
 	   Y = Y[keep]

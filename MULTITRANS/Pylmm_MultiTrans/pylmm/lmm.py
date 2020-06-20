@@ -295,7 +295,7 @@ class LMM:
 	 REML is computed by adding additional terms to the standard LL and can be computed by setting REML=True.
       """
 
-      if X == None: X = self.X0t
+      if X.all() == None: X = self.X0t
       elif stack: 
 	 self.X0t_stack[:,(self.q)] = matrixMult(self.Kve.T,X)[:,0]
 	 X = self.X0t_stack
