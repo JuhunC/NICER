@@ -79,6 +79,7 @@ public class MultiTransServlet extends HttpServlet {
 		//Feed Client the main page 
 		RequestDispatcher view = request.getRequestDispatcher("index.html");
 		view.forward(request, response);
+		System.out.println("email : "+emailAddress + " snp_num : "+ snp_num + "window_size : "+window_size+"s_num " + s_num);
 
 		/** Running MultiTrans **/
 		multitrans.run(snp_num, window_size, s_num);
