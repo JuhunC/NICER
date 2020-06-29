@@ -60,7 +60,7 @@ public class MultiTrans_Runnable implements Runnable {
 		try {
 
 			String cmd = 
-					"java -jar " +  Setup.MULTITRANSdir+ "/generateC/jgenerateC.jar"
+					"java -jar " +  Setup.MULTITRANSdir+ "generateC/jgenerateC.jar"
 					+ window_size + " " + email_dir+ "/r.txt "
 					+ email_dir + "/c.txt ";
 			Process proc = Runtime.getRuntime().exec(cmd);		 
@@ -99,7 +99,7 @@ public class MultiTrans_Runnable implements Runnable {
 		try {
 			Process ps = Runtime.getRuntime().exec(
 					"\r\n" + 
-					"python " + Setup.MULTITRANSdir+ "/Pylmm_MultiTrans/pylmmGWAS_multiPhHeri.py -v "
+					"python " + Setup.MULTITRANSdir+ "Pylmm_MultiTrans/pylmmGWAS_multiPhHeri.py -v "
 					+ " --emmaSNP=" + email_dir + "X.txt" 
 					+ "--kfile=" + email_dir +"K.txt"
 					+ " --emmaPHENO=" + email_dir +"Y.txt " 
@@ -117,7 +117,7 @@ public class MultiTrans_Runnable implements Runnable {
 	private void runStage1() {
 		try {
 			Process proc = Runtime.getRuntime().exec(
-					"python " + Setup.MULTITRANSdir+ "/Pylmm_MultiTrans/pylmmKinship.py -v" 
+					"python " + Setup.MULTITRANSdir+ "Pylmm_MultiTrans/pylmmKinship.py -v" 
 					+ " --emmaSNP=" + email_dir +"X.txt"
 					+ " --emmaNumSNPs=" + snp_num + " " 
 					+ email_dir +"K.txt");

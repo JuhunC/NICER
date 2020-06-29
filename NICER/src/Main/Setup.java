@@ -2,7 +2,7 @@ package Main;
 
 public class Setup {
 	// Change Here
-	final static String mainDir= "/Users/wd327/eclipse-workspace/NICER";
+	final static String mainDir= "/Users/wd327/eclipse-workspace/NICER/";
 	
 	final static String FileSaveDirectory = mainDir+"/NICERRESULT/";
 	final static String FileSaveDirectory_Multitrans = mainDir+"/MULTITRANS_RESULT/";
