@@ -2,8 +2,26 @@
 NICE Renew
 (other features such as GAMMA, Multitrans will be updated)
 
-# Prerequistes for running Source Code
-(suggest using Linux environment)
+# Setup using Docker image
+1. cat Docker image
+nicer_centos.tar file should be created after these commands
+```
+cd docker/
+cat nicer_centos.tar* | tar -xzcf
+```
+2. Install Docker
+
+3. Run NICER using Docker
+```
+docker load -i nicer_centos.tar
+docker run --priviledged -d -p 8080:8080 nicer_centos init
+docker exec -it containername
+```
+3. Check NICER using web
+```
+Quick link: http://localhost:8080
+```
+# Setup using Eclipse(on Linux)
 1. Basic instructions
 ```
 sudo chmod -c 777 ./NICER/ -R
