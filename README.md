@@ -7,7 +7,7 @@ NICE Renew
 nicer_centos.tar file should be created after these commands
 ```
 cd docker/
-cat nicer_centos.tar* | tar -xzcf
+cat nicer_centos.tar* >> nicer_centos.tar
 ```
 2. Install Docker
 
