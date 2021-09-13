@@ -38,6 +38,7 @@ public class NICE {
 		}
 		 
 		email_dir += getCurrentStrDate()+"/";// append date within email address 
+		System.out.println("¿Ã∏ﬁ¿œ" + email_dir);
 //		email_dir += "2019-04-07_13-17-53/";
 		userDir = new File(email_dir);
 		userDir.mkdir();

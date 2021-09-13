@@ -1,0 +1,18 @@
+MultiTrans is an efficient and accurate multiple testing correction approach for linear mixed models. Our method performs a unique transformation of genotype data to account for genetic relatedness and heritability under linear mixed models, as well as to efficiently utilize the multivariate normal distribution.
+
+Copyright (c) 2016 ZarLab
+ 
+     This program is free software: you can redistribute it and/or modify
+     it under the terms of the GNU Affero General Public License as published by
+     the Free Software Foundation, either version 3 of the License, or
+     (at your option) any later version.
+ 
+     This program is distributed in the hope that it will be useful,
+     but WITHOUT ANY WARRANTY; without even the implied warranty of
+     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+     GNU General Public License for more details.
+ 
+     You should have received a copy of the GNU General Public License
+     along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+For release info, user-guide and additional informations, please refer to http://genetics.cs.ucla.edu/MultiTrans/
